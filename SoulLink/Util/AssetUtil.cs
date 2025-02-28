@@ -92,6 +92,17 @@ namespace SoulLink.Util
         }
 
         /// <summary>
+        /// Loads a Texture2D from the base game Risk of Rain 2 libraries. You must have the full path for the sprite.
+        /// </summary>
+        /// <param name="path">The path to the sprite in the game's files. Ex. "RoR2/Base/Brother/texBrotherIcon.png"</param>
+        /// <returns>The loaded Sprite from the game.</returns>
+        public static Texture2D LoadBaseGameTexture(string path)
+        {
+            return Addressables.LoadAssetAsync<Texture2D>(path).WaitForCompletion();
+        //public static GameObject defaultModel = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();
+        }
+
+        /// <summary>
         /// Loads a GameObject (3D Model) from the base game Risk of Rain 2 libraries. You must have the full path for the sprite.
         /// </summary>
         /// <param name="path">The path to the model in the game's files. Ex. "RoR2/Base/Mystery/PickupMystery.prefab"</param>
