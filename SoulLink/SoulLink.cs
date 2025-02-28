@@ -1,5 +1,6 @@
 using BepInEx;
 using PrestigeItems.Items;
+using SoulLink.Items;
 using R2API;
 using RoR2;
 using SoulLink.Util;
@@ -37,18 +38,17 @@ namespace SoulLink
 
             Log.Debug($"Asset Bundle loaded from stream. (allegedly)");
 
-            // Initialize item classes
-            DevCube.Init();
-            Boilerplate.Init(); // Disabled for now
-
+            //// Initialize item classes
+            //DevCube.Init();
+            SoulLinkEquip.Init();
         }
 
         // The Update() method is run on every frame of the game.
         private void Update()
         {
-            
+
             // These are debug controls. I'm disabling them during normal gameplay, but keeping so I can test.
-            DebugSpawnItem(Boilerplate.myItemDef, KeyCode.F1);
+            DebugSpawnEquipment(SoulLinkEquip.equipDef, KeyCode.F1);
             
         }
 
@@ -62,6 +62,19 @@ namespace SoulLink
                 // And then drop our defined item in front of the player.
                 Log.Info($"Player pressed {keyTrigger}. Spawning our custom item {itemDef.name} at coordinates {transform.position}");
                 PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(itemDef.itemIndex), transform.position, transform.forward * 20f);
+            }
+        }
+        
+        private void DebugSpawnEquipment(EquipmentDef equipDef, KeyCode keyTrigger)
+        {
+            if (Input.GetKeyDown(keyTrigger))
+            {
+                // Get the player body to use a position:
+                var transform = PlayerCharacterMasterController.instances[0].master.GetBodyObject().transform;
+
+                // And then drop our defined item in front of the player.
+                Log.Info($"Player pressed {keyTrigger}. Spawning our custom equipment {equipDef.name} at coordinates {transform.position}");
+                PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(equipDef.equipmentIndex), transform.position, transform.forward * 20f);
             }
         }
     }
