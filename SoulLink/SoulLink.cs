@@ -5,6 +5,7 @@ using R2API;
 using RoR2;
 using SoulLink.Util;
 using UnityEngine;
+using SoulLink.UI;
 
 namespace SoulLink
 {
@@ -26,6 +27,8 @@ namespace SoulLink
         public const string PluginName = "SoulLinkEquipment";
         public const string PluginVersion = "0.0.0";
 
+        private bool hudInitialized;
+
         public static PluginInfo SavedInfo { get; private set; }
 
         // The Awake() method is run at the very start when the game is initialized.
@@ -46,10 +49,38 @@ namespace SoulLink
         // The Update() method is run on every frame of the game.
         private void Update()
         {
+            ManageCustomHUD();
 
             // These are debug controls. I'm disabling them during normal gameplay, but keeping so I can test.
             DebugSpawnEquipment(SoulLinkEquip.equipDef, KeyCode.F1);
-            
+        }
+
+        private void ManageCustomHUD()
+        {
+            if (Application.isPlaying)
+            {
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    SoulLinkPanel.Toggle();
+                }
+
+                if (!hudInitialized)
+                {
+                    hudInitialized = true;
+                    var hud = GameObject.Find("HUDSimple(Clone)");
+                    Transform mainContainer = hud.transform.Find("MainContainer");
+                    Transform mainUIArea = mainContainer.Find("MainUIArea");
+                    mainUIArea.gameObject.SetActive(true);
+
+                    var springCanvas = mainUIArea.Find("SpringCanvas");
+                    Transform screenLocation = springCanvas.Find("UpperRightCluster");
+
+                    SoulLinkPanel myUI = SoulLinkPanel.CreateUI(screenLocation);
+                    Instantiate(myUI, screenLocation);
+
+                    SoulLinkPanel.Show();
+                }
+            }
         }
 
         private void DebugSpawnItem(ItemDef itemDef, KeyCode keyTrigger)
