@@ -50,20 +50,24 @@ namespace SoulLink.UI
         {
             GameObject labelObj = AssetUtil.LoadBaseGameModel("RoR2/Base/UI/DefaultLabel.prefab");
             var soulLinkLabel = Instantiate(labelObj, transform);
-
             RectTransform labelRect = (RectTransform)soulLinkLabel.transform;
             labelRect.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-            labelRect.pivot = new Vector2(0f, -.1f);
+            labelRect.pivot = new Vector2(0f, 0f);
             labelRect.SetAsFirstSibling();
+            labelRect.anchorMin = new Vector2(0.5f, .75f); // Centered at the top
+            labelRect.anchorMax = new Vector2(0.5f, .75f);
 
             HGTextMeshProUGUI textMesh = soulLinkLabel.GetComponent<HGTextMeshProUGUI>();
             textMesh.text = "Forge Your Bond";
             textMesh.color = Color.white;
             textMesh.fontSize = 25;
+            textMesh.alignment = TextAlignmentOptions.Center;
+            //labelRect.sizeDelta += new Vector2(0, 20);
 
             Vector2 contentsDimensions = CreateImageGrid(LoadExampleSprites());
             RectTransform myBG = GetComponent<RectTransform>();
-            myBG.sizeDelta = new Vector2(contentsDimensions.x + 20, contentsDimensions.y + 20);
+            myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
+            labelRect.SetParent(myBG.transform);
         }
 
         private Vector2 CreateImageGrid(Sprite[] imageSprites)
@@ -140,11 +144,11 @@ namespace SoulLink.UI
 
             TextMeshProUGUI textComponent = keybindLabel.AddComponent<TextMeshProUGUI>();
             textComponent.text = optionSelectKeybinds[index].ToString().Replace("Alpha", "");
-            textComponent.fontSize = 20;
+            textComponent.fontSize = 22;
             textComponent.alignment = TextAlignmentOptions.Center;
 
             RectTransform textRect = keybindLabel.GetComponent<RectTransform>();
-            textRect.sizeDelta = new Vector2(75, 30);
+            textRect.sizeDelta = new Vector2(75, 50);
             textRect.pivot = new Vector2(0.5f, 0);
             textRect.anchoredPosition = Vector2.zero;
 
@@ -183,14 +187,26 @@ namespace SoulLink.UI
             rectTransform.sizeDelta = new Vector2(400, 300); // Adjust as needed
 
             Image background = panelObject.AddComponent<Image>();
-            background.color = new Color(0, 0, 0, 0.7f); // Semi-transparent black
+            background.color = Color.white;//new Color(0, 0, 0, 0.7f); // Semi-transparent black
+
+            Sprite roundedBG = AssetUtil.LoadBaseGameSprite("RoR2/CU8/texArtifactDelusionPickerBGMain.png");
+            if(roundedBG)
+            {
+                roundedBG.border.Set(40, 55, 40, 55);
+                background.sprite = roundedBG;
+                background.type = Image.Type.Sliced;
+                background.material = null;
+            } else
+            {
+                Debug.LogWarning("Failed to load rounded corner sprite.");
+            }
 
             SoulLinkPanel panel = panelObject.AddComponent<SoulLinkPanel>();
             return panel;
         }
 
-        // Method just for debugging the UI Grid
-        private Sprite[] LoadExampleSprites()
+            // Method just for debugging the UI Grid
+            private Sprite[] LoadExampleSprites()
         {
             // Replace with actual loading logic
             return new Sprite[]
