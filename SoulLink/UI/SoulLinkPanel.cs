@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 using System.ComponentModel;
+using System.Linq;
 
 namespace SoulLink.UI
 {
@@ -13,12 +14,16 @@ namespace SoulLink.UI
 
         private string lastSelectedOption;
         private List<Image> selectableImages = new List<Image>();
+        public Sprite[] optionCatalogue { get; set; }
+        private int currentPage = 0;
+
         private static KeyCode[] optionSelectKeybinds = new KeyCode[]
         {
             KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
             KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6,
             KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9
         };
+        private static KeyCode nextPageKeybind = KeyCode.Alpha0;
 
         public static void Toggle()
         {
@@ -48,8 +53,17 @@ namespace SoulLink.UI
 
         public void Render()
         {
+            foreach(Transform child in transform)
+            {
+                if (child.name != "SoulLinkLabel") // Ensure label isn't removed
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
             GameObject labelObj = AssetUtil.LoadBaseGameModel("RoR2/Base/UI/DefaultLabel.prefab");
             var soulLinkLabel = Instantiate(labelObj, transform);
+            soulLinkLabel.name = "SoulLinkLabel";
             RectTransform labelRect = (RectTransform)soulLinkLabel.transform;
             labelRect.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             labelRect.pivot = new Vector2(0f, 0f);
@@ -64,7 +78,9 @@ namespace SoulLink.UI
             textMesh.alignment = TextAlignmentOptions.Center;
             //labelRect.sizeDelta += new Vector2(0, 20);
 
-            Vector2 contentsDimensions = CreateImageGrid(LoadExampleSprites());
+            Sprite[] pageSprites = GetPageSprites(optionCatalogue, currentPage);
+
+            Vector2 contentsDimensions = CreateImageGrid(pageSprites);
             RectTransform myBG = GetComponent<RectTransform>();
             myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
             labelRect.SetParent(myBG.transform);
@@ -132,7 +148,7 @@ namespace SoulLink.UI
 
             RectTransform rectTransform = imgObj.AddComponent<RectTransform>();
             rectTransform.sizeDelta = new Vector2(75, 75);
-
+            
             Image image = imgObj.AddComponent<Image>();
             image.sprite = imageSprite;
             image.color = Color.white;
@@ -165,6 +181,20 @@ namespace SoulLink.UI
                 {
                     OnImageSelected(i);
                 }
+            }
+
+            if(Input.GetKeyDown(nextPageKeybind))
+            {
+                int maxPages = Mathf.CeilToInt((float)optionCatalogue.Length / 9);
+                Log.Debug($"Key pressed: currentPage {currentPage}, maxPages {maxPages}, selectableImages.Count {selectableImages.Count}. Rendering.");
+                currentPage++;
+                if (currentPage >= maxPages)
+                {
+                    currentPage = 0;
+                    selectableImages.Clear();
+                }
+                Log.Debug($"Page calculated: currentPage {currentPage}, maxPages {maxPages}, selectableImages.Count {selectableImages.Count}. Rendering.");
+                Render();
             }
         }
 
@@ -202,11 +232,27 @@ namespace SoulLink.UI
             }
 
             SoulLinkPanel panel = panelObject.AddComponent<SoulLinkPanel>();
+
+            panel.optionCatalogue = panel.LoadExampleSprites();
+
             return panel;
         }
 
-            // Method just for debugging the UI Grid
-            private Sprite[] LoadExampleSprites()
+        private Sprite[] GetPageSprites(Sprite[] allSprites, int page)
+        {
+            int startIndex = page * 9;
+
+            Log.Debug($"GetPageSprites: startIndex {startIndex}, page {page}, allSprites.Length {allSprites.Length}");
+            if(startIndex >= allSprites.Length)
+            {
+                return allSprites.Take(9).ToArray();
+            }
+
+            return allSprites.Skip(startIndex).Take(9).ToArray();
+        }
+
+        // Method just for debugging the UI Grid
+        private Sprite[] LoadExampleSprites()
         {
             // Replace with actual loading logic
             return new Sprite[]
@@ -219,6 +265,9 @@ namespace SoulLink.UI
                 AssetUtil.LoadBaseGameSprite("RoR2/Base/Common/texSurvivorBGIcon.png"),
                 AssetUtil.LoadBaseGameSprite("RoR2/Base/Bear/texBearIcon.png"),
                 ConvertTextureToSprite(AssetUtil.LoadBaseGameTexture("RoR2/Base/ArtifactShell/texUnidentifiedKillerIcon.png")),
+                ConvertTextureToSprite(AssetUtil.LoadBaseGameTexture("RoR2/Base/Mage/texMageIcon.png")), // Number 9
+                ConvertTextureToSprite(AssetUtil.LoadBaseGameTexture("RoR2/Base/Commando/texCommandoIcon.png")), // New Page test
+                ConvertTextureToSprite(AssetUtil.LoadBaseGameTexture("RoR2/Base/Merc/texMercIcon.png"))
             };
         }
 
