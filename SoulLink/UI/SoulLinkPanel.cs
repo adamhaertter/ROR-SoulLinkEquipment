@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using TMPro;
 using System.ComponentModel;
 using System.Linq;
+using System;
 
 namespace SoulLink.UI
 {
@@ -135,9 +136,24 @@ namespace SoulLink.UI
                 CreateImage(gridContainer.transform, imageSprites[i], i);
             }
 
+            
+
             int rows = Mathf.Min(3, Mathf.CeilToInt(imageSprites.Length / 3f)); // 3 images per row
             float totalHeight = rows * (gridLayout.cellSize.y + gridLayout.spacing.y) + 20; // Padding
             float totalWidth = 3 * (gridLayout.cellSize.x + gridLayout.spacing.x) + 20;
+
+            GameObject keybindLabel = new GameObject("KeybindLabel_NextPage");
+            keybindLabel.transform.SetParent(windowContainer.transform, false);
+
+            TextMeshProUGUI textComponent = keybindLabel.AddComponent<TextMeshProUGUI>();
+            textComponent.text = $"Press {nextPageKeybind.ToString().Replace("Alpha", "")} for next page.";
+            textComponent.fontSize = 22;
+            textComponent.alignment = TextAlignmentOptions.Right;
+
+            RectTransform textRect = keybindLabel.GetComponent<RectTransform>();
+            textRect.sizeDelta = new Vector2(totalWidth, totalHeight);
+            textRect.pivot = new Vector2(0.5f, 1f);
+            textRect.anchoredPosition = Vector2.zero;
 
             fullContainerRect.sizeDelta = new Vector2(totalWidth, totalHeight);
             return new Vector2(totalWidth + 20, totalHeight + 20);
