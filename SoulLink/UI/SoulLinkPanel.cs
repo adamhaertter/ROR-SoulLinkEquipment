@@ -15,7 +15,8 @@ namespace SoulLink.UI
         private string lastSelectedOption;
         private List<Image> selectableImages = new List<Image>();
         public Sprite[] optionCatalogue { get; set; }
-        private int currentPage = 0;
+        public int selectedOptionIndex = -1;
+        public int currentPage = 0;
 
         private static KeyCode[] optionSelectKeybinds = new KeyCode[]
         {
@@ -60,6 +61,7 @@ namespace SoulLink.UI
                     Destroy(child.gameObject);
                 }
             }
+            Log.Debug($"Render: All children destroyed");
 
             GameObject labelObj = AssetUtil.LoadBaseGameModel("RoR2/Base/UI/DefaultLabel.prefab");
             var soulLinkLabel = Instantiate(labelObj, transform);
@@ -70,6 +72,7 @@ namespace SoulLink.UI
             labelRect.SetAsFirstSibling();
             labelRect.anchorMin = new Vector2(0.5f, .75f); // Centered at the top
             labelRect.anchorMax = new Vector2(0.5f, .75f);
+            Log.Debug($"Render: LabelRect set up and anchored");
 
             HGTextMeshProUGUI textMesh = soulLinkLabel.GetComponent<HGTextMeshProUGUI>();
             textMesh.text = "Forge Your Bond";
@@ -77,13 +80,20 @@ namespace SoulLink.UI
             textMesh.fontSize = 25;
             textMesh.alignment = TextAlignmentOptions.Center;
             //labelRect.sizeDelta += new Vector2(0, 20);
+            Log.Debug($"Render: TextMesh established.");
 
+            Log.Debug($"Loading pageSprites. optionCatalogue.Length {optionCatalogue.Length}");
             Sprite[] pageSprites = GetPageSprites(optionCatalogue, currentPage);
+            Log.Debug($"pageSprites Loaded. pageSprites.Length {pageSprites.Length}");
 
             Vector2 contentsDimensions = CreateImageGrid(pageSprites);
+            Log.Debug($"Render: Image Grid Created");
+
             RectTransform myBG = GetComponent<RectTransform>();
             myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
+            Log.Debug($"Render: BG Image resized");
             labelRect.SetParent(myBG.transform);
+            Log.Debug($"Render: labelRect parent reset.");
         }
 
         private Vector2 CreateImageGrid(Sprite[] imageSprites)
@@ -191,8 +201,8 @@ namespace SoulLink.UI
                 if (currentPage >= maxPages)
                 {
                     currentPage = 0;
-                    selectableImages.Clear();
                 }
+                selectableImages.Clear();
                 Log.Debug($"Page calculated: currentPage {currentPage}, maxPages {maxPages}, selectableImages.Count {selectableImages.Count}. Rendering.");
                 Render();
             }
@@ -202,10 +212,13 @@ namespace SoulLink.UI
         {
             if (index < 0 || index >= selectableImages.Count) return;
 
+            selectedOptionIndex = index;
             lastSelectedOption = $"Option {index}";
             Debug.Log($"Selected: {lastSelectedOption}");
 
-            Toggle(); // Close UI after selection
+            //Toggle(); // Close UI after selection
+            //Destroy(gameObject); // TODO not sure if this will have terrible repurcussions 
+
         }
 
         public static SoulLinkPanel CreateUI(Transform parent)
@@ -233,7 +246,7 @@ namespace SoulLink.UI
 
             SoulLinkPanel panel = panelObject.AddComponent<SoulLinkPanel>();
 
-            panel.optionCatalogue = panel.LoadExampleSprites();
+            //panel.optionCatalogue = panel.LoadExampleSprites();
 
             return panel;
         }

@@ -7,6 +7,9 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 using static RoR2.Items.BaseItemBodyBehavior;
+using SoulLink.UI;
+using UnityEngine.EventSystems;
+using RoR2.UI;
 
 namespace SoulLink.Items
 {
@@ -14,7 +17,6 @@ namespace SoulLink.Items
     {
         public static EquipmentDef equipDef;
         private static String itemId = "SoulLink";
-        private bool isFirstUse = true; //TODO This is gonna have to become a body behavior.
         private static SurvivorDef[] validTransformTargets;
 
         internal static void Init()
@@ -50,7 +52,14 @@ namespace SoulLink.Items
             equipDef.cooldown = 60f;
 
             // TODO Initialize valid list of transformable survivors
-            validTransformTargets = SurvivorCatalog.survivorDefs;
+            /*
+            validTransformTargets = SurvivorCatalog.orderedSurvivorDefs.Where(survivorDef => 
+                                                                              SurvivorCatalog.SurvivorIsUnlockedOnThisClient(survivorDef.survivorIndex) && 
+                                                                              survivorDef.CheckRequiredExpansionEnabled() && // Avoid character piracy lol
+                                                                              survivorDef.CheckUserHasRequiredEntitlement(((MPEventSystem)EventSystem.current).localUser)).ToArray();
+            */
+            validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
+            Log.Debug($"validTransformTargets set at create time with {validTransformTargets.Length} as its length");
         }
 
         // The game logic for the item's functionality goes in this method
@@ -79,6 +88,12 @@ namespace SoulLink.Items
 
                     if(myBehavior)
                     {
+                        if (myBehavior.TransformTargetOptions == null)
+                        {
+                            SearchForSurvivorDefs();
+                            myBehavior.TransformTargetOptions = validTransformTargets;
+                            Log.Debug("TransformTargetOptions initialized on myBehavior.");
+                        }
                         myBehavior.activated = true; 
                         Log.Debug("SoulLinkEquip: Behavior activated set to true.");
                     }
@@ -106,6 +121,12 @@ namespace SoulLink.Items
             LanguageAPI.Add(itemId + "_LORE", lore);
         }
 
+        private static void SearchForSurvivorDefs()
+        {
+            validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
+            Log.Debug($"validTransformTargets set with {validTransformTargets.Length} as its length");
+        }
+
         public class SoulLinkEquipBehavior : CharacterBody.ItemBehavior
         {
             [ItemDefAssociation(useOnServer = true, useOnClient = false)]
@@ -113,7 +134,8 @@ namespace SoulLink.Items
             public bool activated = false;
             private bool firstTimeUse = true;
             private SurvivorDef chosenSurvivorTarget;
-            private SurvivorDef[] TransformTargetOptions {  get; set; }
+            public SurvivorDef[] TransformTargetOptions {  get; set; }
+            private SoulLinkPanel menu;
 
             private void onEnable()
             {
@@ -135,6 +157,26 @@ namespace SoulLink.Items
                     {
                         // TODO Prompt the user to pick a target
                         Log.Debug("SoulLinkEquip: First time use!");
+                        if(menu == null)
+                        {
+                            var hud = GameObject.Find("HUDSimple(Clone)");
+                            Transform mainContainer = hud.transform.Find("MainContainer");
+                            Transform mainUIArea = mainContainer.Find("MainUIArea");
+                            mainUIArea.gameObject.SetActive(true);
+
+                            //var springCanvas = mainUIArea.Find("SpringCanvas");
+                            //Transform screenLocation = springCanvas.Find("UpperRightCluster");
+
+                            menu = SoulLinkPanel.CreateUI(mainUIArea);
+                            //Instantiate(menu, mainUIArea);
+
+                            menu.optionCatalogue = GetTargetImages(TransformTargetOptions);
+                            Log.Debug($"optionCatalogue set in FixedUpdate. TransformTargetOptions.Length {TransformTargetOptions.Length}, optionCatalogue.Length {menu.optionCatalogue.Length}");
+                            menu.Render();
+                            //SoulLinkPanel.Show();
+                            Log.Debug("Menu Initialized in Behavior");
+                        }
+                        //SoulLinkPanel.Toggle();
                         firstTimeUse = false;
                     }
                     else
@@ -143,8 +185,12 @@ namespace SoulLink.Items
                         Log.Debug("SoulLinkEquip: NOT first time use!");
                         if (chosenSurvivorTarget)
                         {
+                            SurvivorDef originalBody = SurvivorCatalog.GetSurvivorDef(SurvivorCatalog.GetSurvivorIndexFromBodyIndex(this.body.bodyIndex));
                             this.body.master.bodyPrefab = chosenSurvivorTarget.bodyPrefab;
-                            this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 10f, 0f), body.master.GetBody().transform.rotation);
+                            CharacterBody newBody = this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 10f, 0f), body.master.GetBody().transform.rotation);
+                            
+                            firstTimeUse = false; // Reinforce this once we respawn.
+                            chosenSurvivorTarget = originalBody;
                         } else
                         {
                             firstTimeUse = true;
@@ -153,10 +199,28 @@ namespace SoulLink.Items
                     activated = false;
 
                 }
+                if(menu && menu.selectedOptionIndex > 0 && chosenSurvivorTarget == null)
+                {
+                    var selectedIndex = (menu.currentPage * 9) + menu.selectedOptionIndex;
+                    chosenSurvivorTarget = TransformTargetOptions[selectedIndex];
+                    Log.Debug($"chosenSurvivorTarget picked! selectedIndex {selectedIndex}, menu.selectedOptionIndex {menu.selectedOptionIndex}, chosenSurvivorTarget.cachedName {chosenSurvivorTarget.cachedName}");
+                    Destroy(menu.gameObject); // Only destroy the window once we have our answer.
+                }
             }
 
         }
 
+        private static Sprite[] GetTargetImages(SurvivorDef[] survivorDefs) // I know this is a horrible reference but I am exhausted!!
+        {
+            List<Sprite> sprites = new List<Sprite>();
+            foreach (SurvivorDef def in survivorDefs)
+            {
+                Texture tex = SurvivorCatalog.GetSurvivorPortrait(def.survivorIndex);
+                sprites.Add(SoulLinkPanel.ConvertTextureToSprite(tex as Texture2D));
+            }
+            Log.Debug($"GetTargetImages: Returning {sprites.Count} sprites from {survivorDefs.Length} survivorDefs");
+            return sprites.ToArray();
 
+        }
     }
 }
