@@ -67,8 +67,15 @@ namespace SoulLink.Items
         {
             On.RoR2.CharacterBody.OnInventoryChanged += (orig, body) =>
             {
-                body.AddItemBehavior<SoulLinkEquipBehavior>(body.inventory.GetEquipment(body.inventory.activeEquipmentSlot).equipmentDef == equipDef ? 1 : 0);
-                Log.Debug($"Added SoulLinkEquipBehavior to {body.name}");
+                // TODO Might have to remove this, not entirely sure but leaning towards yes.
+                if (body.GetComponent<SoulLinkEquipBehavior>() == null)
+                {
+                    body.AddItemBehavior<SoulLinkEquipBehavior>(body.inventory.GetEquipment(body.inventory.activeEquipmentSlot).equipmentDef == equipDef ? 1 : 0);
+                    Log.Debug($"Added SoulLinkEquipBehavior to {body.name}");
+                } else
+                {
+                    Log.Debug($"Bypassed adding SoulLinkEquipBehavior to {body.name}");
+                }
             };
 
             // TODO Write item functionality. Start with the trigger, then write the rest. See other item implementations for examples.
@@ -132,8 +139,8 @@ namespace SoulLink.Items
             [ItemDefAssociation(useOnServer = true, useOnClient = false)]
             public static EquipmentDef GetEquipDef() => equipDef;
             public bool activated = false;
-            private bool firstTimeUse = true;
-            private SurvivorDef chosenSurvivorTarget;
+            public bool firstTimeUse = true;
+            public SurvivorDef chosenSurvivorTarget;
             public SurvivorDef[] TransformTargetOptions {  get; set; }
             private SoulLinkPanel menu;
 
@@ -187,10 +194,13 @@ namespace SoulLink.Items
                         {
                             SurvivorDef originalBody = SurvivorCatalog.GetSurvivorDef(SurvivorCatalog.GetSurvivorIndexFromBodyIndex(this.body.bodyIndex));
                             this.body.master.bodyPrefab = chosenSurvivorTarget.bodyPrefab;
-                            CharacterBody newBody = this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 10f, 0f), body.master.GetBody().transform.rotation);
-                            
-                            firstTimeUse = false; // Reinforce this once we respawn.
-                            chosenSurvivorTarget = originalBody;
+                            var newBody = this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 5f, 0f), body.master.GetBody().transform.rotation);
+
+                            var newBehavior = newBody.AddItemBehavior<SoulLinkEquipBehavior>(1);
+                            newBehavior.firstTimeUse = false;
+                            newBehavior.chosenSurvivorTarget = originalBody;
+                            Log.Debug("Values set before respawning...");
+                            Log.Debug("Transforming!");
                         } else
                         {
                             firstTimeUse = true;
