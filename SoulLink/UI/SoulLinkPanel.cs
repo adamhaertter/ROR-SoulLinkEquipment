@@ -71,8 +71,8 @@ namespace SoulLink.UI
             labelRect.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             labelRect.pivot = new Vector2(0f, 0f);
             labelRect.SetAsFirstSibling();
-            labelRect.anchorMin = new Vector2(0.5f, .75f); // Centered at the top
-            labelRect.anchorMax = new Vector2(0.5f, .75f);
+            labelRect.anchorMin = new Vector2(0.5f, 0.85f); // Centered at the top
+            labelRect.anchorMax = new Vector2(0.5f, 0.85f);
             Log.Debug($"Render: LabelRect set up and anchored");
 
             HGTextMeshProUGUI textMesh = soulLinkLabel.GetComponent<HGTextMeshProUGUI>();
@@ -91,7 +91,9 @@ namespace SoulLink.UI
             Log.Debug($"Render: Image Grid Created");
 
             RectTransform myBG = GetComponent<RectTransform>();
-            myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
+            //myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
+            float maxDim = Math.Max(contentsDimensions.x, contentsDimensions.y);
+            myBG.sizeDelta = new Vector2(maxDim * 1.25f, maxDim * 1.45f);
             Log.Debug($"Render: BG Image resized");
             labelRect.SetParent(myBG.transform);
             Log.Debug($"Render: labelRect parent reset.");
@@ -148,7 +150,7 @@ namespace SoulLink.UI
             TextMeshProUGUI textComponent = keybindLabel.AddComponent<TextMeshProUGUI>();
             textComponent.text = $"Press {nextPageKeybind.ToString().Replace("Alpha", "")} for next page.";
             textComponent.fontSize = 22;
-            textComponent.alignment = TextAlignmentOptions.Right;
+            textComponent.alignment = TextAlignmentOptions.Center;
 
             RectTransform textRect = keybindLabel.GetComponent<RectTransform>();
             textRect.sizeDelta = new Vector2(totalWidth, totalHeight);
@@ -248,7 +250,8 @@ namespace SoulLink.UI
             Image background = panelObject.AddComponent<Image>();
             background.color = Color.white;//new Color(0, 0, 0, 0.7f); // Semi-transparent black
 
-            Sprite roundedBG = AssetUtil.LoadBaseGameSprite("RoR2/CU8/texArtifactDelusionPickerBGMain.png");
+            //Sprite roundedBG = AssetUtil.LoadBaseGameSprite("RoR2/CU8/texArtifactDelusionPickerBGMain.png");
+            Sprite roundedBG = AssetUtil.LoadSprite("SoulLinkMenuUI.png");
             if(roundedBG)
             {
                 roundedBG.border.Set(40, 55, 40, 55);

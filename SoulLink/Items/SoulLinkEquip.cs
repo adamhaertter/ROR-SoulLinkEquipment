@@ -220,7 +220,7 @@ namespace SoulLink.Items
                     activated = false;
 
                 }
-                if(menu && menu.selectedOptionIndex > 0 && chosenSurvivorTarget == null)
+                if(menu && menu.selectedOptionIndex >= 0 && chosenSurvivorTarget == null)
                 {
                     var selectedIndex = (menu.currentPage * 9) + menu.selectedOptionIndex;
                     chosenSurvivorTarget = TransformTargetOptions[selectedIndex];
