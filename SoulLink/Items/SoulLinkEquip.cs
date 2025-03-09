@@ -53,16 +53,6 @@ namespace SoulLink.Items
             equipDef.canBeRandomlyTriggered = true;
             equipDef.canDrop = true;
             equipDef.cooldown = 60f;
-
-            // TODO Initialize valid list of transformable survivors
-            /*
-            validTransformTargets = SurvivorCatalog.orderedSurvivorDefs.Where(survivorDef => 
-                                                                              SurvivorCatalog.SurvivorIsUnlockedOnThisClient(survivorDef.survivorIndex) && 
-                                                                              survivorDef.CheckRequiredExpansionEnabled() && // Avoid character piracy lol
-                                                                              survivorDef.CheckUserHasRequiredEntitlement(((MPEventSystem)EventSystem.current).localUser)).ToArray();
-            */
-            validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
-            Log.Debug($"validTransformTargets set at create time with {validTransformTargets.Length} as its length");
         }
 
         // The game logic for the item's functionality goes in this method
@@ -144,7 +134,13 @@ namespace SoulLink.Items
         }
         private static void SearchForSurvivorDefs()
         {
-            validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
+            //validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
+
+            validTransformTargets = SurvivorCatalog.orderedSurvivorDefs.Where(survivorDef =>
+                                                                             SurvivorCatalog.SurvivorIsUnlockedOnThisClient(survivorDef.survivorIndex) &&
+                                                                             survivorDef.CheckRequiredExpansionEnabled() && // Avoid character piracy lol
+                                                                             survivorDef.CheckUserHasRequiredEntitlement(((MPEventSystem)EventSystem.current).localUser)).ToArray();
+
             Log.Debug($"validTransformTargets set with {validTransformTargets.Length} as its length");
         }
 
