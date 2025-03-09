@@ -14,6 +14,7 @@ using Rewired;
 using static UnityEngine.ParticleSystem.PlaybackState;
 using UnityEngine.UIElements.Experimental;
 using UnityEngine.XR;
+using static RoR2.MasterSpawnSlotController;
 
 namespace SoulLink.Items
 {
@@ -71,7 +72,7 @@ namespace SoulLink.Items
                 }
             };
 
-            // TODO Write item functionality. Start with the trigger, then write the rest. See other item implementations for examples.
+            // Write item functionality. Start with the trigger, then write the rest. See other item implementations for examples.
             On.RoR2.EquipmentSlot.PerformEquipmentAction += (orig, slot, currentEquipDef) =>
             {
                 Log.Debug("SoulLinkEquip: Action performed.");
@@ -225,6 +226,7 @@ namespace SoulLink.Items
                     chosenSurvivorTarget = TransformTargetOptions[selectedIndex];
                     Log.Debug($"chosenSurvivorTarget picked! selectedIndex {selectedIndex}, menu.selectedOptionIndex {menu.selectedOptionIndex}, chosenSurvivorTarget.cachedName {chosenSurvivorTarget.cachedName}");
                     Destroy(menu.gameObject); // Only destroy the window once we have our answer.
+                    body.inventory.DeductActiveEquipmentCooldown(equipDef.cooldown * 3 / 4);
                 }
             }
 
