@@ -8,7 +8,7 @@ namespace SoulLink.Util
     public static class AssetUtil
     {
         public static AssetBundle bundle;
-        public const string bundleName = "prestigemodassets"; // TODO Update this name or we won't be able to get any custom assets eventually
+        public const string bundleName = "soullinkassets";
 
         public static Sprite defaultSprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texMysteryIcon.png").WaitForCompletion();
         public static GameObject defaultModel = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();

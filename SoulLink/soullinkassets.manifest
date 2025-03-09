@@ -1,0 +1,35 @@
+ManifestFileVersion: 0
+CRC: 3460663451
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: cd7d2a61bebb07c75eb5efe6757b4e39
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a7a21288fe2bd6ae3724c7054e7a1302
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/final/SoulLinkIcon_Alt.png
+- Assets/final/SoulLinkModel.prefab
+- Assets/final/SoulLinkIcon.png
+Dependencies: []

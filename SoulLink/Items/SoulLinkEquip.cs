@@ -44,8 +44,8 @@ namespace SoulLink.Items
             equipDef.loreToken = itemId + "_LORE";
 
             // TODO Load your assets
-            equipDef.pickupIconSprite = AssetUtil.LoadSprite("");
-            equipDef.pickupModelPrefab = AssetUtil.LoadModel("");
+            equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
+            equipDef.pickupModelPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab");
 
             equipDef.canBeRandomlyTriggered = true;
             equipDef.canDrop = true;
