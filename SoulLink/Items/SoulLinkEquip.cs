@@ -10,6 +10,10 @@ using static RoR2.Items.BaseItemBodyBehavior;
 using SoulLink.UI;
 using UnityEngine.EventSystems;
 using RoR2.UI;
+using Rewired;
+using static UnityEngine.ParticleSystem.PlaybackState;
+using UnityEngine.UIElements.Experimental;
+using UnityEngine.XR;
 
 namespace SoulLink.Items
 {
@@ -43,7 +47,6 @@ namespace SoulLink.Items
             equipDef.descriptionToken = itemId + "_DESCRIPTION";
             equipDef.loreToken = itemId + "_LORE";
 
-            // TODO Load your assets
             equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
             equipDef.pickupModelPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab");
 
@@ -119,15 +122,26 @@ namespace SoulLink.Items
         // String definitions / key lookup
         private static void AddTokens()
         {
-            LanguageAPI.Add(itemId + "", "Soul Link");
-            LanguageAPI.Add(itemId + "_NAME", "Soul Link");
-            LanguageAPI.Add(itemId + "_PICKUP", "<style=cLunarObjective>Transform</style> into another Survivor <style=cHumanObjective>at will.</style>");
-            LanguageAPI.Add(itemId + "_DESCRIPTION", "<style=cHumanObjective>On use,</style> become a different survivor. <style=cHumanObjective>The first use</style> after pickup will select the survivor to bond to, then further uses will trigger <style=cLunarObjective>the transformation.</style>");
+            LanguageAPI.Add(itemId + "", "Soul Links");
+            LanguageAPI.Add(itemId + "_NAME", "Soul Links");
+            LanguageAPI.Add(itemId + "_PICKUP", "Transform into another Survivor at will.");
+            LanguageAPI.Add(itemId + "_DESCRIPTION", "<style=cHumanObjective>On use,</style> become a different survivor. <style=cHumanObjective>The first use</style> after pickup will select the survivor to bond to, then further uses will trigger <style=cArtifact>the transformation.</style>");
 
-            string lore = "Lore Text"; //TODO Write your lore text here to be shown in the logbook.
+            string lore = "Order: Soul Links" +
+                            "\nTracking Number: 888 * ****" +
+                            "\nEstimated Delivery: 10 / 04 / 2099" +
+                            "\nShipping Method: Priority" +
+                            "\nShipping Address: Pacific Proposal Park, Sole United America, Earth" +
+                            "\nShipping Details:" +
+                            "\n" +
+                            "\nA rather symbollic gesture, but perhaps it will be a welcome one nonetheless. Excavation sites found these two rings forged entirely linked within one another. They are inseparable, but God knows we've tried to break it up. They seem to emit a strange, almost imperceptible, energy reading when pulled tightly together so the inner rings clash. Maybe your establishment can find a use for them." +
+                            "\n" +
+                            "\nIf you don't happen to hear from me, I'll be taking some time away from the lab. Lately, I just haven't been feeling quite like myself." +
+                            "\n" +
+                            "\nRegards," +
+                            "\nDr.Robinson...?";
             LanguageAPI.Add(itemId + "_LORE", lore);
         }
-
         private static void SearchForSurvivorDefs()
         {
             validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
