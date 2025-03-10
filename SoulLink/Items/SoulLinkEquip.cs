@@ -15,6 +15,7 @@ using static UnityEngine.ParticleSystem.PlaybackState;
 using UnityEngine.UIElements.Experimental;
 using UnityEngine.XR;
 using static RoR2.MasterSpawnSlotController;
+using UnityEngine.Networking;
 
 namespace SoulLink.Items
 {
@@ -51,7 +52,7 @@ namespace SoulLink.Items
             equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
             equipDef.pickupModelPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab");
 
-            equipDef.canBeRandomlyTriggered = true;
+            equipDef.canBeRandomlyTriggered = false;
             equipDef.canDrop = true;
             equipDef.cooldown = 60f;
         }
@@ -153,7 +154,11 @@ namespace SoulLink.Items
             public bool firstTimeUse = true;
             public SurvivorDef chosenSurvivorTarget;
             public SurvivorDef[] TransformTargetOptions {  get; set; }
+
             private SoulLinkPanel menu;
+            private bool wasJustRespawned = false;
+            private float healthBeforeTransform;
+            private float curseBeforeTransform;
 
             private void onEnable()
             {
@@ -173,7 +178,7 @@ namespace SoulLink.Items
                 {
                     if (firstTimeUse)
                     {
-                        // TODO Prompt the user to pick a target
+                        // Prompt the user to pick a target
                         Log.Debug("SoulLinkEquip: First time use!");
                         if(menu == null)
                         {
@@ -210,6 +215,10 @@ namespace SoulLink.Items
                             var newBehavior = newBody.AddItemBehavior<SoulLinkEquipBehavior>(1);
                             newBehavior.firstTimeUse = false;
                             newBehavior.chosenSurvivorTarget = originalBody;
+                            newBehavior.wasJustRespawned = true;
+                            newBehavior.healthBeforeTransform = body.healthComponent.health;
+                            newBehavior.curseBeforeTransform = body.cursePenalty;
+
                             Log.Debug("Values set before respawning...");
                             Log.Debug("Transforming!");
                         } else
@@ -228,6 +237,24 @@ namespace SoulLink.Items
                     Destroy(menu.gameObject); // Only destroy the window once we have our answer.
                     body.inventory.DeductActiveEquipmentCooldown(equipDef.cooldown * 3 / 4);
                 }
+                // Deal damage and apply curse on transformation
+                // I have to do this here rather than in the transformation block because I have to let the game recalculate the health portions for the new body first.
+                if (wasJustRespawned && NetworkServer.active)
+                {
+                    var damageInfo = new DamageInfo
+                    {
+                        position = transform.position,
+                        damage = body.healthComponent.combinedHealth - healthBeforeTransform,
+                        procCoefficient = 0f,
+                        damageType = DamageType.NonLethal | DamageType.BypassArmor | DamageType.BypassBlock,
+                        damageColorIndex = DamageColorIndex.Luminous,
+                        attacker = null
+                    };
+
+                    body.healthComponent.TakeDamage(damageInfo);
+                    body.cursePenalty = curseBeforeTransform;
+                    wasJustRespawned = false;
+                }
             }
 
         }
@@ -242,7 +269,6 @@ namespace SoulLink.Items
             }
             Log.Debug($"GetTargetImages: Returning {sprites.Count} sprites from {survivorDefs.Length} survivorDefs");
             return sprites.ToArray();
-
         }
     }
 }
