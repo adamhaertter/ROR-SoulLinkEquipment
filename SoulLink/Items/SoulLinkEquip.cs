@@ -62,6 +62,7 @@ namespace SoulLink.Items
         {
             On.RoR2.CharacterBody.OnInventoryChanged += (orig, body) =>
             {
+                orig(body);
                 // TODO Might have to remove this, not entirely sure but leaning towards yes.
                 if (body.GetComponent<SoulLinkEquipBehavior>() == null)
                 {
