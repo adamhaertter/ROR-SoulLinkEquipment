@@ -55,7 +55,9 @@ namespace SoulLink.UI
 
         public void Render()
         {
-            foreach(Transform child in transform)
+            optionSelectKeybinds = SoulLink.GetOptionKeys();
+            nextPageKeybind = SoulLink.GetPagingKey();
+            foreach (Transform child in transform)
             {
                 if (child.name != "SoulLinkLabel") // Ensure label isn't removed
                 {

@@ -1,4 +1,4 @@
-using BepInEx;
+﻿using BepInEx;
 using PrestigeItems.Items;
 using SoulLink.Items;
 using R2API;
@@ -6,6 +6,9 @@ using RoR2;
 using SoulLink.Util;
 using UnityEngine;
 using SoulLink.UI;
+using BepInEx.Configuration;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 
 namespace SoulLink
 {
@@ -13,6 +16,7 @@ namespace SoulLink
     // it's just to tell BepInEx to initialize R2API before this plugin so it's safe to use R2API.
     [BepInDependency(ItemAPI.PluginGUID)]
     [BepInDependency(LanguageAPI.PluginGUID)]
+    [BepInDependency("com.rune580.riskofoptions")]
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 
     public class SoulLink : BaseUnityPlugin
@@ -29,7 +33,18 @@ namespace SoulLink
 
         private bool hudInitialized;
 
-        public static PluginInfo SavedInfo { get; private set; }
+        private static ConfigEntry<KeyboardShortcut> uiOption1Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption2Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption3Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption4Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption5Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption6Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption7Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption8Key;
+        private static ConfigEntry<KeyboardShortcut> uiOption9Key;
+        private static ConfigEntry<KeyboardShortcut> uiPagingKey;
+
+        public static BepInEx.PluginInfo SavedInfo { get; private set; }
 
         // The Awake() method is run at the very start when the game is initialized.
         public void Awake()
@@ -40,6 +55,30 @@ namespace SoulLink
             AssetUtil.Init();
 
             Log.Debug($"Asset Bundle loaded from stream. (allegedly)");
+
+            // Initialize RiskOfOptions Settings
+            string tabKeybinds = "Keybinds";
+            uiOption1Key = Config.Bind(new ConfigDefinition(tabKeybinds, "First Option Select"), new KeyboardShortcut(KeyCode.Alpha1), new ConfigDescription("The keybind used to select the first, or top-left, option in the Soul Links UI menu. By default this is Numrow 1.\n\nXOO\nOOO\nOOO"));
+            uiOption2Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Second Option Select"), new KeyboardShortcut(KeyCode.Alpha2), new ConfigDescription("The keybind used to select the second, or top-center, option in the Soul Links UI menu. By default this is Numrow 2.\n\nOXO\nOOO\nOOO"));
+            uiOption3Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Third Option Select"), new KeyboardShortcut(KeyCode.Alpha3), new ConfigDescription("The keybind used to select the third, or top-right, option in the Soul Links UI menu. By default this is Numrow 3.\n\nOOX\nOOO\nOOO"));
+            uiOption4Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Fourth Option Select"), new KeyboardShortcut(KeyCode.Alpha4), new ConfigDescription("The keybind used to select the fourth, or middle-left, option in the Soul Links UI menu. By default this is Numrow 4.\n\nOOO\nXOO\nOOO"));
+            uiOption5Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Fifth Option Select"), new KeyboardShortcut(KeyCode.Alpha5), new ConfigDescription("The keybind used to select the fifth, or middle-center, option in the Soul Links UI menu. By default this is Numrow 5.\n\nOOO\nOXO\nOOO"));
+            uiOption6Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Sixth Option Select"), new KeyboardShortcut(KeyCode.Alpha6), new ConfigDescription("The keybind used to select the sixth, or middle-right, option in the Soul Links UI menu. By default this is Numrow 6.\n\nOOO\nOOX\nOOO"));
+            uiOption7Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Seventh Option Select"), new KeyboardShortcut(KeyCode.Alpha7), new ConfigDescription("The keybind used to select the seventh, or bottom-left, option in the Soul Links UI menu. By default this is Numrow 7.\n\nOOO\nOOO\nXOO"));
+            uiOption8Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Eighth Option Select"), new KeyboardShortcut(KeyCode.Alpha8), new ConfigDescription("The keybind used to select the eighth, or bottom-center, option in the Soul Links UI menu. By default this is Numrow 8.\n\nOOO\nOOO\nOXO"));
+            uiOption9Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Ninth Option Select"), new KeyboardShortcut(KeyCode.Alpha9), new ConfigDescription("The keybind used to select the ninth, or bottom-right, option in the Soul Links UI menu. By default this is Numrow 9.\n\nOOO\nOOO\nOOX"));
+            uiPagingKey = Config.Bind(new ConfigDefinition(tabKeybinds, "Page Toggle Key"), new KeyboardShortcut(KeyCode.Alpha0), new ConfigDescription("The keybind used to toggle the page selection in the Soul Links UI menu. By default this is Numrow 0."));
+
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption1Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption2Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption3Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption4Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption5Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption6Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption7Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption8Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiOption9Key));
+            ModSettingsManager.AddOption(new KeyBindOption(uiPagingKey));
 
             //// Initialize item classes
             //DevCube.Init();
@@ -107,6 +146,20 @@ namespace SoulLink
                 Log.Info($"Player pressed {keyTrigger}. Spawning our custom equipment {equipDef.name} at coordinates {transform.position}");
                 PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(equipDef.equipmentIndex), transform.position, transform.forward * 20f);
             }
+        }
+
+        public static KeyCode GetPagingKey() 
+        { 
+            return uiPagingKey.Value.MainKey; 
+        }
+
+        public static KeyCode[] GetOptionKeys()
+        {
+            return [
+                uiOption1Key.Value.MainKey, uiOption2Key.Value.MainKey, uiOption3Key.Value.MainKey,
+                uiOption4Key.Value.MainKey, uiOption5Key.Value.MainKey, uiOption6Key.Value.MainKey,
+                uiOption7Key.Value.MainKey, uiOption8Key.Value.MainKey, uiOption9Key.Value.MainKey
+                ];
         }
     }
 }
