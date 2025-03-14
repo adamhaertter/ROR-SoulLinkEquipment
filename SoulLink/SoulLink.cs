@@ -43,6 +43,7 @@ namespace SoulLink
         private static ConfigEntry<KeyboardShortcut> uiOption8Key;
         private static ConfigEntry<KeyboardShortcut> uiOption9Key;
         private static ConfigEntry<KeyboardShortcut> uiPagingKey;
+        private static ConfigEntry<bool> isLunarEquip;
 
         public static BepInEx.PluginInfo SavedInfo { get; private set; }
 
@@ -56,6 +57,10 @@ namespace SoulLink
 
             Log.Debug($"Asset Bundle loaded from stream. (allegedly)");
 
+            string tabOptions = "Configuration";
+            isLunarEquip = Config.Bind(new ConfigDefinition(tabOptions, "Make Lunar Equipment"), false, new ConfigDescription("Do you want the Soul Links to be a Lunar equipment? If this is enabled, the item tier will change to Lunar, so they will no longer spawn in Equipment Barrels. The functionality is the same.\n\nBy default, this is disabled, meaning they will be a standard orange Equipment. As a standard Equipment, Scavengers have a chance to spawn with this Equipment."));
+            ModSettingsManager.AddOption(new CheckBoxOption(isLunarEquip, true)); // Because this happens in Awake(), we need a restart for the tier change to take effect.
+
             // Initialize RiskOfOptions Settings
             string tabKeybinds = "Keybinds";
             uiOption1Key = Config.Bind(new ConfigDefinition(tabKeybinds, "First Option Select"), new KeyboardShortcut(KeyCode.Alpha1), new ConfigDescription("The keybind used to select the first, or top-left, option in the Soul Links UI menu. By default this is Numrow 1.\n\nXOO\nOOO\nOOO"));
@@ -67,7 +72,7 @@ namespace SoulLink
             uiOption7Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Seventh Option Select"), new KeyboardShortcut(KeyCode.Alpha7), new ConfigDescription("The keybind used to select the seventh, or bottom-left, option in the Soul Links UI menu. By default this is Numrow 7.\n\nOOO\nOOO\nXOO"));
             uiOption8Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Eighth Option Select"), new KeyboardShortcut(KeyCode.Alpha8), new ConfigDescription("The keybind used to select the eighth, or bottom-center, option in the Soul Links UI menu. By default this is Numrow 8.\n\nOOO\nOOO\nOXO"));
             uiOption9Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Ninth Option Select"), new KeyboardShortcut(KeyCode.Alpha9), new ConfigDescription("The keybind used to select the ninth, or bottom-right, option in the Soul Links UI menu. By default this is Numrow 9.\n\nOOO\nOOO\nOOX"));
-            uiPagingKey = Config.Bind(new ConfigDefinition(tabKeybinds, "Page Toggle Key"), new KeyboardShortcut(KeyCode.Alpha0), new ConfigDescription("The keybind used to toggle the page selection in the Soul Links UI menu. By default this is Numrow 0."));
+            uiPagingKey  = Config.Bind(new ConfigDefinition(tabKeybinds, "Page Toggle Key"), new KeyboardShortcut(KeyCode.Alpha0), new ConfigDescription("The keybind used to toggle the page selection in the Soul Links UI menu. By default this is Numrow 0."));
 
             ModSettingsManager.AddOption(new KeyBindOption(uiOption1Key));
             ModSettingsManager.AddOption(new KeyBindOption(uiOption2Key));
@@ -79,7 +84,7 @@ namespace SoulLink
             ModSettingsManager.AddOption(new KeyBindOption(uiOption8Key));
             ModSettingsManager.AddOption(new KeyBindOption(uiOption9Key));
             ModSettingsManager.AddOption(new KeyBindOption(uiPagingKey));
-
+            
             //// Initialize item classes
             //DevCube.Init();
             SoulLinkEquip.Init();
@@ -160,6 +165,11 @@ namespace SoulLink
                 uiOption4Key.Value.MainKey, uiOption5Key.Value.MainKey, uiOption6Key.Value.MainKey,
                 uiOption7Key.Value.MainKey, uiOption8Key.Value.MainKey, uiOption9Key.Value.MainKey
                 ];
+        }
+
+        public static bool isConfigLunar()
+        {
+            return isLunarEquip.Value;
         }
     }
 }

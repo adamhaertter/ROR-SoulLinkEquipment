@@ -11,7 +11,7 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 ## To-Do List
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
-- Make cooldown, item tier, and more configurable.
+- Make cooldown (and more?) configurable.
 - Add an icon for Risk of Options UI
 - Add a chat message when the bond happens. (to indicate for Scavengers, too)
 - Test screenshot / instant restart issue
@@ -33,6 +33,7 @@ If you found this because you've encountered an issue with the mod, please submi
 | Icon | Name | Description |
 | --- | --- | --- |
 | ![SoulLink Icon](https://github.com/adamhaertter/ROR-SoulLinkEquipment/blob/master/img/SoulLinkIcon.png?raw=true) | Soul Links | Transform into another Survivor at will. |
+*The tier of this item is configurable. It can be made either a standard Equipment or Lunar Equipment from the Settings menu in-game.*
 
 ## Installation
 You can download the latest uploaded release from the ThunderStore on the release [page](https://thunderstore.io/package/BlueBubbee/Prestige_Items_Beta/) or by using the mod manager. **This is the recommended installation.** I'd recommend using r2ModMan as your launcher, but the Thunderstore app probably works too.

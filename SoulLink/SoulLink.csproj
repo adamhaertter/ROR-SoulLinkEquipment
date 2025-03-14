@@ -11,7 +11,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="soullinkassets" />
+	  <EmbeddedResource Include="soullinkassets">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

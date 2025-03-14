@@ -49,12 +49,23 @@ namespace SoulLink.Items
             equipDef.descriptionToken = itemId + "_DESCRIPTION";
             equipDef.loreToken = itemId + "_LORE";
 
-            equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
             equipDef.pickupModelPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab");
 
             equipDef.canBeRandomlyTriggered = false;
             equipDef.canDrop = true;
             equipDef.cooldown = 60f;
+
+            if(SoulLink.isConfigLunar())
+            {
+                equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon_Lunar.png");
+                equipDef.isLunar = true;
+                equipDef.colorIndex = ColorCatalog.ColorIndex.LunarItem;
+            } else
+            {
+                equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
+                equipDef.isLunar = false;
+                equipDef.colorIndex = ColorCatalog.ColorIndex.Equipment;
+            }
         }
 
         // The game logic for the item's functionality goes in this method

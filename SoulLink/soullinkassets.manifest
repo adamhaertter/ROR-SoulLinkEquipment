@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1887875918
+CRC: 744021519
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 243c7762d3b01154d00644a8f7cdc31b
+    Hash: 8ea427165fe3ef58fa746d9d2ea9b3ec
   TypeTreeHash:
     serializedVersion: 2
     Hash: a7a21288fe2bd6ae3724c7054e7a1302
@@ -30,7 +30,9 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/final/SoulLinkMenuUI.png
+- Assets/final/SoulLinkModIcon.png
 - Assets/final/SoulLinkIcon_Alt.png
 - Assets/final/SoulLinkModel.prefab
+- Assets/final/SoulLinkIcon_Lunar.png
 - Assets/final/SoulLinkIcon.png
 Dependencies: []
