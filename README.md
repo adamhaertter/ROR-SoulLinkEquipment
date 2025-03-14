@@ -8,6 +8,17 @@
 
 This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier item to the game which allows you to swap your playable character when used. It features custom UI functionality, as well as configurable options support to replace the keybinds for the custom window. The item is fully modelled and sprited.
 
+## To-Do List
+- Hide the debug controls (P, F1)
+- Create the Thunderstore upload
+- Make cooldown, item tier, and more configurable.
+- Add an icon for Risk of Options UI
+- Add a chat message when the bond happens. (to indicate for Scavengers, too)
+- Test screenshot / instant restart issue
+- Test with Fuel Cell, Bottled Chaos, Gesture.
+- Address inline TODOs
+- Code cleanup (last)
+
 ## Issues and Bugs
 
 If you found this because you've encountered an issue with the mod, please submit a report as a GitHub Issue above so that I can look into it. Thanks!

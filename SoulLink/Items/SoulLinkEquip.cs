@@ -86,7 +86,7 @@ namespace SoulLink.Items
                         Log.Debug($"{body.name} no longer has Soul Links, resetting behavior to first time use state.");
                         var behavior = body.GetComponent<SoulLinkEquipBehavior>();
                         behavior.firstTimeUse = true;
-                        behavior.chosenSurvivorTarget = null; // Nullify this so that the menu can reassign a new character.
+                        behavior.chosenBodyTarget = null; // Nullify this so that the menu can reassign a new character.
                     }
                 }
             };
@@ -170,7 +170,7 @@ namespace SoulLink.Items
             public static EquipmentDef GetEquipDef() => equipDef;
             public bool activated = false;
             public bool firstTimeUse = true;
-            public SurvivorDef chosenSurvivorTarget;
+            public CharacterBody chosenBodyTarget; 
             public SurvivorDef[] TransformTargetOptions {  get; set; }
 
             private SoulLinkPanel menu;
@@ -194,6 +194,14 @@ namespace SoulLink.Items
             {
                 if (activated)
                 {
+                    if (chosenBodyTarget == null && !body.isPlayerControlled)
+                    {
+                        // Manual override so if an AI body (Scavenger, Equip Drone, etc.) picks this up, they won't have to menu.
+                        firstTimeUse = false;
+                        chosenBodyTarget = GetBodyFromSurvivorDef(TransformTargetOptions[UnityEngine.Random.RandomRangeInt(0, TransformTargetOptions.Length)]);
+                        Log.Debug($"AI user {body.name} has been assigned {chosenBodyTarget.name} as their Link");
+                    }
+
                     if (firstTimeUse)
                     {
                         // Prompt the user to pick a target
@@ -224,23 +232,25 @@ namespace SoulLink.Items
                     {
                         // Transform the user into the target
                         Log.Debug("SoulLinkEquip: NOT first time use!");
-                        if (chosenSurvivorTarget)
-                        {
-                            SurvivorDef originalBody = SurvivorCatalog.GetSurvivorDef(SurvivorCatalog.GetSurvivorIndexFromBodyIndex(this.body.bodyIndex));
-                            this.body.master.bodyPrefab = chosenSurvivorTarget.bodyPrefab;
-                            var newBody = this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 5f, 0f), body.master.GetBody().transform.rotation);
+                        if (chosenBodyTarget)
 
+                        {
+                            CharacterBody originalBody = BodyCatalog.bodyPrefabBodyComponents.Where(searchBody => searchBody.bodyIndex == body.bodyIndex).FirstOrDefault();
+                            this.body.master.bodyPrefab = BodyCatalog.GetBodyPrefab(chosenBodyTarget.bodyIndex);
+                            var newBody = this.body.master.Respawn(this.body.master.GetBody().transform.position + new Vector3(0f, 5f, 0f), body.master.GetBody().transform.rotation);
                             var newBehavior = newBody.AddItemBehavior<SoulLinkEquipBehavior>(1);
                             newBehavior.firstTimeUse = false;
-                            newBehavior.chosenSurvivorTarget = originalBody;
+                            newBehavior.chosenBodyTarget = originalBody;
                             newBehavior.wasJustRespawned = true;
                             newBehavior.healthBeforeTransform = body.healthComponent.health;
                             newBehavior.curseBeforeTransform = body.cursePenalty;
 
                             Log.Debug("Values set before respawning...");
+                            Log.Debug($"originalBody: {originalBody.name}, newBody: {newBody.name}");
                             Log.Debug("Transforming!");
                         } else
                         {
+                            Log.Debug($"No chosenBodyTarget detected on current body {body.name}");
                             firstTimeUse = true;
                         }
                     }
@@ -248,11 +258,11 @@ namespace SoulLink.Items
 
                 }
                 // Assign the selected character once it is chosen in the menu
-                if(menu && menu.selectedOptionIndex >= 0 && chosenSurvivorTarget == null)
+                if(menu && menu.selectedOptionIndex >= 0 && chosenBodyTarget == null)
                 {
                     var selectedIndex = (menu.currentPage * 9) + menu.selectedOptionIndex;
-                    chosenSurvivorTarget = TransformTargetOptions[selectedIndex];
-                    Log.Debug($"chosenSurvivorTarget picked! selectedIndex {selectedIndex}, menu.selectedOptionIndex {menu.selectedOptionIndex}, chosenSurvivorTarget.cachedName {chosenSurvivorTarget.cachedName}");
+                    chosenBodyTarget = GetBodyFromSurvivorDef(TransformTargetOptions[selectedIndex]); 
+                    Log.Debug($"chosenBodyTarget picked! selectedIndex {selectedIndex}, menu.selectedOptionIndex {menu.selectedOptionIndex}, chosenBodyTarget.name {chosenBodyTarget.name}");
                     Destroy(menu.gameObject); // Only destroy the window once we have our answer.
                     body.inventory.DeductActiveEquipmentCooldown(equipDef.cooldown * 3 / 4);
                 }
@@ -274,6 +284,14 @@ namespace SoulLink.Items
                     body.cursePenalty = curseBeforeTransform;
                     wasJustRespawned = false;
                 }
+            }
+
+            // Retrieves the CharacterBody when given a SurvivorDef, part of remapping from chosenSurvivorTarget : SurvivorDef to chosenBodyTarget : CharacterBody
+            private static CharacterBody GetBodyFromSurvivorDef(SurvivorDef survivorDef)
+            {
+                return BodyCatalog.bodyPrefabBodyComponents.Where(bodyDef => 
+                    bodyDef.bodyIndex == SurvivorCatalog.GetBodyIndexFromSurvivorIndex(survivorDef.survivorIndex)
+                    ).ToArray().FirstOrDefault();
             }
 
         }
