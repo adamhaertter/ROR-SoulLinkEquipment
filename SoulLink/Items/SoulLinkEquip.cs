@@ -63,14 +63,31 @@ namespace SoulLink.Items
             On.RoR2.CharacterBody.OnInventoryChanged += (orig, body) =>
             {
                 orig(body);
-                // TODO Might have to remove this, not entirely sure but leaning towards yes.
                 if (body.GetComponent<SoulLinkEquipBehavior>() == null)
                 {
                     body.AddItemBehavior<SoulLinkEquipBehavior>(body.inventory.GetEquipment(body.inventory.activeEquipmentSlot).equipmentDef == equipDef ? 1 : 0);
                     Log.Debug($"Added SoulLinkEquipBehavior to {body.name}");
                 } else
-                {
-                    Log.Debug($"Bypassed adding SoulLinkEquipBehavior to {body.name}");
+                { 
+                    // Check if the equipment is held in any possible slots (thanks MUL-T)
+                    bool foundMyEquipment = false;
+                    foreach (var equipState in body.inventory.equipmentStateSlots)
+                    {
+                        if(equipState.equipmentDef == equipDef)
+                        {
+                            // If you have this equipment in one of your slots.
+                           foundMyEquipment = true;
+                            break;
+                        }
+                    }
+                    if (!foundMyEquipment)
+                    {
+                        // If a body no longer has this equipment but has had it before, we want to reset the params.
+                        Log.Debug($"{body.name} no longer has Soul Links, resetting behavior to first time use state.");
+                        var behavior = body.GetComponent<SoulLinkEquipBehavior>();
+                        behavior.firstTimeUse = true;
+                        behavior.chosenSurvivorTarget = null; // Nullify this so that the menu can reassign a new character.
+                    }
                 }
             };
 
@@ -230,6 +247,7 @@ namespace SoulLink.Items
                     activated = false;
 
                 }
+                // Assign the selected character once it is chosen in the menu
                 if(menu && menu.selectedOptionIndex >= 0 && chosenSurvivorTarget == null)
                 {
                     var selectedIndex = (menu.currentPage * 9) + menu.selectedOptionIndex;
