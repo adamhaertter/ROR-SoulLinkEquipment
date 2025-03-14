@@ -29,7 +29,7 @@ namespace SoulLink
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "BlueB";
         public const string PluginName = "SoulLinkEquipment";
-        public const string PluginVersion = "0.0.0";
+        public const string PluginVersion = "0.0.0"; // TODO Update version number when it's ready for a real release.
 
         private bool hudInitialized;
 
@@ -57,11 +57,33 @@ namespace SoulLink
 
             Log.Debug($"Asset Bundle loaded from stream. (allegedly)");
 
+            InitializeConfigOptions();
+            
+            // Initialize item classes
+            SoulLinkEquip.Init();
+        }
+
+        // The Update() method is run on every frame of the game.
+        private void Update()
+        {   
+            // These are debug controls. I'm disabling them during normal gameplay, but keeping so I can test.
+            ManageCustomHUD();
+            DebugSpawnEquipment(SoulLinkEquip.equipDef, KeyCode.F1);
+        }
+
+        private void InitializeConfigOptions()
+        {
+            // Initialize Risk of Options Data
+            ModSettingsManager.SetModDescription("This mod adds 1 configurable equipment to the game that lets the player transform between any 2 survivors. Change the menu keybinds, item tier, and tweak specific values here.");
+            Sprite icon = AssetUtil.LoadSprite("SoulLinkModIcon.png");
+            ModSettingsManager.SetModIcon(icon);    
+
+            // Option Page -- Configuration
             string tabOptions = "Configuration";
             isLunarEquip = Config.Bind(new ConfigDefinition(tabOptions, "Make Lunar Equipment"), false, new ConfigDescription("Do you want the Soul Links to be a Lunar equipment? If this is enabled, the item tier will change to Lunar, so they will no longer spawn in Equipment Barrels. The functionality is the same.\n\nBy default, this is disabled, meaning they will be a standard orange Equipment. As a standard Equipment, Scavengers have a chance to spawn with this Equipment."));
             ModSettingsManager.AddOption(new CheckBoxOption(isLunarEquip, true)); // Because this happens in Awake(), we need a restart for the tier change to take effect.
 
-            // Initialize RiskOfOptions Settings
+            // Option Page -- Keybinds
             string tabKeybinds = "Keybinds";
             uiOption1Key = Config.Bind(new ConfigDefinition(tabKeybinds, "First Option Select"), new KeyboardShortcut(KeyCode.Alpha1), new ConfigDescription("The keybind used to select the first, or top-left, option in the Soul Links UI menu. By default this is Numrow 1.\n\nXOO\nOOO\nOOO"));
             uiOption2Key = Config.Bind(new ConfigDefinition(tabKeybinds, "Second Option Select"), new KeyboardShortcut(KeyCode.Alpha2), new ConfigDescription("The keybind used to select the second, or top-center, option in the Soul Links UI menu. By default this is Numrow 2.\n\nOXO\nOOO\nOOO"));
@@ -84,19 +106,6 @@ namespace SoulLink
             ModSettingsManager.AddOption(new KeyBindOption(uiOption8Key));
             ModSettingsManager.AddOption(new KeyBindOption(uiOption9Key));
             ModSettingsManager.AddOption(new KeyBindOption(uiPagingKey));
-            
-            //// Initialize item classes
-            //DevCube.Init();
-            SoulLinkEquip.Init();
-        }
-
-        // The Update() method is run on every frame of the game.
-        private void Update()
-        {
-            ManageCustomHUD();
-
-            // These are debug controls. I'm disabling them during normal gameplay, but keeping so I can test.
-            DebugSpawnEquipment(SoulLinkEquip.equipDef, KeyCode.F1);
         }
 
         private void ManageCustomHUD()
