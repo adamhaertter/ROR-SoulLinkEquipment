@@ -30,7 +30,7 @@ namespace SoulLink.Items
             GenerateItem();
             AddTokens();
 
-            var displayRules = new ItemDisplayRuleDict(null);
+            var displayRules = CreateDisplayRules();
             ItemAPI.Add(new CustomEquipment(equipDef, displayRules));
 
             Hooks();
@@ -66,6 +66,26 @@ namespace SoulLink.Items
                 equipDef.isLunar = false;
                 equipDef.colorIndex = ColorCatalog.ColorIndex.Equipment;
             }
+        }
+
+        private static ItemDisplayRuleDict CreateDisplayRules()
+        {
+            var displays = new ItemDisplayRuleDict();
+
+            displays.Add("EquipmentDroneBody", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "GunBarrelBase",
+                    localPos = new Vector3(-.2F, 0F, 2.1F),
+                    localAngles = new Vector3(90F, 0F, 0F),
+                    localScale = new Vector3(0.4F, 0.4F, 0.4F)
+                }
+            });
+
+            return displays;
         }
 
         // The game logic for the item's functionality goes in this method
@@ -130,7 +150,6 @@ namespace SoulLink.Items
                     }
 
                     return true;
-
                 }
                 else
                 {

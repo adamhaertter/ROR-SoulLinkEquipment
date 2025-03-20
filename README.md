@@ -12,7 +12,10 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
 - Make cooldown (and more?) configurable.
+    - Can attempt to test with bottled chaos by running through AI check if inventory contains bottled chaos
 - Add a chat message when the bond happens. (to indicate for Scavengers, too)
+- Potentially add item displays for other base game survivors
+    - Modded survivors are out of scope for this for me currently
 - Test screenshot / instant restart issue
 - Test with Fuel Cell, Bottled Chaos, Gesture.
 - Address inline TODOs
