@@ -6,16 +6,12 @@
 
 ## Description
 
-This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier item to the game which allows you to swap your playable character when used. It features custom UI functionality, as well as configurable options support to replace the keybinds for the custom window. The item is fully modelled and sprited.
+This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier item to the game which allows you to swap your playable character when used. It features custom UI functionality, as well as configurable options support to tweak specifics and replace the keybinds for the custom window. The item is fully modelled and sprited.
 
 ## To-Do List
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
-- Make bottled chaos configurable (once tested).
-    - Can attempt to test with bottled chaos by running through AI check if inventory contains bottled chaos
 - Add a chat message when the bond happens. (to indicate for Scavengers, too)
-- Potentially add item displays for other base game survivors
-    - Modded survivors are out of scope for this for me currently
 - Test screenshot / instant restart issue
 - Test with Fuel Cell, Bottled Chaos, Gesture.
 - Address inline TODOs
@@ -48,4 +44,5 @@ I built this with the knowledge I had gained from my work on [my first mod](http
 - [Modding Wiki Tutorials & Boilerplate Demo](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Getting-Started/First-Mod/)
 - [Henry Tutorial](https://github.com/ArcPh1r3/HenryTutorial) 
 - [KomradeSpectre's Aetherium Item Tutorial](https://www.youtube.com/watch?v=8TsF8elv_m0)
-- Everyone's help in the Modding Discord as well :)
+- [ItemDisplayPlacementHelper by KingEnderBrine](https://thunderstore.io/package/KingEnderBrine/ItemDisplayPlacementHelper/)
+    - I would not have been up to doing the item displays if it weren't for this mod.

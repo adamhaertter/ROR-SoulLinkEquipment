@@ -85,6 +85,216 @@ namespace SoulLink.Items
                 }
             });
 
+            displays.Add("mdlCommandoDualies", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Pelvis",
+                    localPos = new Vector3(0.15965F, -0.10945F, -0.13692F),
+                    localAngles = new Vector3(314.421F, 130.9908F, 201.2805F),
+                    localScale = new Vector3(0.06134F, 0.03805F, 0.06134F)
+
+                }
+            });
+            displays.Add("mdlHuntress", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "BowHinge1L",
+                    localPos = new Vector3(0.16519F, 0.04391F, 0.04425F),
+                    localAngles = new Vector3(344.6824F, 320.9641F, 240.9161F),
+                    localScale = new Vector3(0.06956F, 0.06956F, 0.06956F)
+
+                }
+            });
+            displays.Add("mdlBandit2", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Stomach",
+                    localPos = new Vector3(0.21794F, 0.03553F, 0.09086F),
+                    localAngles = new Vector3(11.73269F, 130.9432F, 323.907F),
+                    localScale = new Vector3(0.06571F, 0.06571F, 0.06571F)
+                }
+            });
+            displays.Add("mdlToolbot", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Neck",
+                    localPos = new Vector3(0.21707F, 1.58903F, 0.35364F),
+                    localAngles = new Vector3(346.6717F, 315.2442F, 295.8514F),
+                    localScale = new Vector3(0.59539F, 0.59539F, 0.59539F)
+                }
+            });
+            displays.Add("mdlEngi", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Chest",
+                    localPos = new Vector3(0.02309F, -0.11628F, -0.29646F),
+                    localAngles = new Vector3(343.5479F, 128.2443F, 32.49729F),
+                    localScale = new Vector3(0.08699F, 0.08699F, 0.08699F)
+                }
+            });
+            displays.Add("mdlMage", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "UpperArmR",
+                    localPos = new Vector3(-0.12986F, 0.1991F, -0.04129F),
+                    localAngles = new Vector3(347.4306F, 345.6252F, 85.64943F),
+                    localScale = new Vector3(0.08238F, 0.08238F, 0.08238F)
+                }
+            });
+            displays.Add("mdlMerc", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "HandL",
+                    localPos = new Vector3(-0.09109F, 0.0813F, -0.03169F),
+                    localAngles = new Vector3(21.70813F, 323.4272F, 49.0989F),
+                    localScale = new Vector3(0.08252F, 0.08394F, 0.07476F)
+                }
+            });
+            displays.Add("mdlTreebot", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "WeaponPlatform",
+                    localPos = new Vector3(0.26516F, -0.35155F, 0.48567F),
+                    localAngles = new Vector3(348.9675F, 351.5085F, 73.60771F),
+                    localScale = new Vector3(0.24464F, 0.13364F, 0.13364F)
+                }
+            });
+            displays.Add("mdlLoader", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Chest",
+                    localPos = new Vector3(0.35216F, 0.49106F, 0.23169F),
+                    localAngles = new Vector3(350.0082F, 312.9914F, 285.678F),
+                    localScale = new Vector3(0.08396F, 0.06583F, 0.08396F)
+                }
+            });
+            displays.Add("mdlCroco", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Head",
+                    localPos = new Vector3(-2.05468F, 1.85249F, -3.67751F),
+                    localAngles = new Vector3(15.07537F, 324.9648F, 73.08989F),
+                    localScale = new Vector3(-1.77162F, 2.20423F, 2.53584F)
+                }
+            });
+            displays.Add("mdlCaptain", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "HandL",
+                    localPos = new Vector3(-0.05515F, -0.11752F, -0.01267F),
+                    localAngles = new Vector3(290.4974F, 312.2321F, 331.4503F),
+                    localScale = new Vector3(0.1F, 0.1F, 0.1F)
+                }
+            });
+            // Removed here: Heretic. She doesn't get item displays in the base game.
+            displays.Add("mdlRailGunner", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "GunRoot",
+                    localPos = new Vector3(-0.01791F, 0.00001F, -0.36122F),
+                    localAngles = new Vector3(0.00006F, 78.96882F, 271.9931F),
+                    localScale = new Vector3(0.05038F, 0.05038F, 0.05038F)
+                }
+            });
+            displays.Add("mdlVoidSurvivor", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Hand",
+                    localPos = new Vector3(-0.01978F, -0.03643F, -0.01855F),
+                    localAngles = new Vector3(55.10281F, 68.31735F, 76.12302F),
+                    localScale = new Vector3(0.1F, 0.1F, 0.1F)
+                }
+            });
+            displays.Add("mdlSeeker", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Pack",
+                    localPos = new Vector3(0.08363F, 0.17586F, -0.34696F),
+                    localAngles = new Vector3(347.5371F, 236.0009F, 99.67917F),
+                    localScale = new Vector3(0.1F, 0.1F, 0.1F)
+                }
+            });
+            displays.Add("mdlFalseSon", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "LowerArmL",
+                    localPos = new Vector3(-0.00107F, 0.06443F, -0.04812F),
+                    localAngles = new Vector3(285.4764F, 342.4372F, 287.4732F),
+                    localScale = new Vector3(0.20777F, 0.11744F, 0.14546F)
+                }
+            });
+            // I may or may not have phoned this one in HARD. Enjoy his "gold necklace" lmao
+            displays.Add("mdlChef", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "Head",
+                    localPos = new Vector3(0.03178F, 0.16548F, 0.25901F),
+                    localAngles = new Vector3(327.3342F, 168.3224F, 3.33605F),
+                    localScale = new Vector3(0.11638F, 0.17782F, 0.22501F)
+
+                }
+            });
+            displays.Add("mdlScav", new ItemDisplayRule[]
+            {
+                new ItemDisplayRule
+                {
+                    ruleType = ItemDisplayRuleType.ParentedPrefab,
+                    followerPrefab = AssetUtil.LoadModel("SoulLinkModel.prefab"),
+                    childName = "MuzzleEnergyCannon",
+                    localPos = new Vector3(7.05081F, 3.682F, -5.10893F),
+                    localAngles = new Vector3(352.1646F, 347.9308F, 280.7483F),
+                    localScale = new Vector3(2.4235F, 1.67428F, 2.85059F)
+                }
+            });
+
             return displays;
         }
 
