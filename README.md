@@ -35,6 +35,7 @@ If you found this because you've encountered an issue with the mod, please submi
 | Icon | Name | Description |
 | --- | --- | --- |
 | ![SoulLink Icon](https://github.com/adamhaertter/ROR-SoulLinkEquipment/blob/master/img/SoulLinkIcon.png?raw=true) | Soul Links | Transform into another Survivor at will. |
+
 *The tier of this item is configurable. It can be made either a standard Equipment or Lunar Equipment from the Settings menu in-game.*
 
 ## Installation
