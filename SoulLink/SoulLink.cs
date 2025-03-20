@@ -44,6 +44,9 @@ namespace SoulLink
         private static ConfigEntry<KeyboardShortcut> uiOption9Key;
         private static ConfigEntry<KeyboardShortcut> uiPagingKey;
         private static ConfigEntry<bool> isLunarEquip;
+        private static ConfigEntry<float> customCooldown;
+        private static ConfigEntry<bool> useRandomBond;
+        private static ConfigEntry<bool> allowHeretic;
 
         public static BepInEx.PluginInfo SavedInfo { get; private set; }
 
@@ -82,6 +85,22 @@ namespace SoulLink
             string tabOptions = "Configuration";
             isLunarEquip = Config.Bind(new ConfigDefinition(tabOptions, "Make Lunar Equipment"), false, new ConfigDescription("Do you want the Soul Links to be a Lunar equipment? If this is enabled, the item tier will change to Lunar, so they will no longer spawn in Equipment Barrels. The functionality is the same.\n\nBy default, this is disabled, meaning they will be a standard orange Equipment. As a standard Equipment, Scavengers have a chance to spawn with this Equipment."));
             ModSettingsManager.AddOption(new CheckBoxOption(isLunarEquip, true)); // Because this happens in Awake(), we need a restart for the tier change to take effect.
+            
+            customCooldown = Config.Bind(new ConfigDefinition(tabOptions, "Equipment Cooldown"), 60f, new ConfigDescription("Set a custom cooldown (in seconds) for the Soul Links to make them more balanced (or more broken). Tweak away to your heart's content.\n\nBy default, this timer is set to 60, making the equipment useable once per minute."));
+            ModSettingsManager.AddOption(new FloatFieldOption(customCooldown));
+            customCooldown.SettingChanged += (obj, args) =>
+            {
+                if (customCooldown.Value >= 1) // Limit to 1+ because 0 lets you respawn before you even spawn in, causing infinite flight
+                    SoulLinkEquip.equipDef.cooldown = customCooldown.Value; // Update cooldown in real time to avoid needing to restart.
+                else
+                    customCooldown.Value = 1;
+            };
+
+            useRandomBond = Config.Bind(new ConfigDefinition(tabOptions, "Bond to Random Survivor"), false, new ConfigDescription("If you don't want to navigate the UI menu or would just like some more randomness in your life, checking this box will make it so won't be able to pick your transform target. Instead, using the equipment will bond you to a random available survivor on your first use.\n\nNote: This is not the recommended way to use the mod, but I added it for a little extra fun. By default, this is false. Please note that this still links between two survivors -- your starting character and one randomly chosen on first use. This does not give a random survivor every roll."));
+            ModSettingsManager.AddOption(new CheckBoxOption(useRandomBond));
+            
+            allowHeretic = Config.Bind(new ConfigDefinition(tabOptions, "Allow Heretic"), true, new ConfigDescription("By checking this box, you are allowing Heretic into the pool of selectable survivors. Heretic does not come with any of the four Heresy items, meaning all four of her abilities will be Nevermore (unless you have one of the Heresy items).\n\nBy default, this value is true because funny, but also because you can simply not choose her. You may want to disable this if you are using random selection."));
+            ModSettingsManager.AddOption(new CheckBoxOption(allowHeretic));
 
             // Option Page -- Keybinds
             string tabKeybinds = "Keybinds";
@@ -162,6 +181,7 @@ namespace SoulLink
             }
         }
 
+        // Risk of Options public access checks from here to EOF:
         public static KeyCode GetPagingKey() 
         { 
             return uiPagingKey.Value.MainKey; 
@@ -176,9 +196,24 @@ namespace SoulLink
                 ];
         }
 
-        public static bool isConfigLunar()
+        public static bool IsConfigLunar()
         {
             return isLunarEquip.Value;
+        }
+
+        public static float GetCustomCooldown()
+        {
+            return customCooldown.Value;
+        }
+
+        public static bool IsRandomBond()
+        {
+            return useRandomBond.Value;
+        }
+
+        public static bool IsHereticAllowed()
+        {
+            return allowHeretic.Value;
         }
     }
 }

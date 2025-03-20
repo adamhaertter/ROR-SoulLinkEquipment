@@ -53,9 +53,9 @@ namespace SoulLink.Items
 
             equipDef.canBeRandomlyTriggered = false;
             equipDef.canDrop = true;
-            equipDef.cooldown = 60f;
+            equipDef.cooldown = SoulLink.GetCustomCooldown();
 
-            if(SoulLink.isConfigLunar())
+            if(SoulLink.IsConfigLunar())
             {
                 equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon_Lunar.png");
                 equipDef.isLunar = true;
@@ -189,6 +189,7 @@ namespace SoulLink.Items
             validTransformTargets = SurvivorCatalog.orderedSurvivorDefs.Where(survivorDef =>
                                                                              SurvivorCatalog.SurvivorIsUnlockedOnThisClient(survivorDef.survivorIndex) &&
                                                                              survivorDef.CheckRequiredExpansionEnabled() && // Avoid character piracy lol
+                                                                             (SoulLink.IsHereticAllowed() || survivorDef.bodyPrefab.name != "HereticBody") &&
                                                                              survivorDef.CheckUserHasRequiredEntitlement(((MPEventSystem)EventSystem.current).localUser)).ToArray();
 
             Log.Debug($"validTransformTargets set with {validTransformTargets.Length} as its length");
@@ -224,7 +225,7 @@ namespace SoulLink.Items
             {
                 if (activated)
                 {
-                    if (chosenBodyTarget == null && !body.isPlayerControlled)
+                    if (chosenBodyTarget == null && (SoulLink.IsRandomBond() || !body.isPlayerControlled))
                     {
                         // Manual override so if an AI body (Scavenger, Equip Drone, etc.) picks this up, they won't have to menu.
                         firstTimeUse = false;
