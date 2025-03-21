@@ -1,5 +1,7 @@
-﻿using RoR2;
+﻿using HarmonyLib;
+using RoR2;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -138,6 +140,26 @@ namespace SoulLink.Util
             modelPanelParameters.cameraPositionTransform = camera.transform;
             modelPanelParameters.minDistance = .1f * SumVectorDims(biggestRenderer.bounds.size);
             modelPanelParameters.maxDistance = 1f * SumVectorDims(biggestRenderer.bounds.size);
+
+            // Add components for item display
+            List<Renderer> renderers = itemModel.GetComponentsInChildren<MeshRenderer>().ToList<Renderer>();
+            renderers.AddRange(itemModel.GetComponentsInChildren<SkinnedMeshRenderer>());
+
+            CharacterModel.RendererInfo[] renderInfos = new CharacterModel.RendererInfo[renderers.Count];
+
+            for (int i = 0; i < renderers.Count; i++)
+            {
+                renderInfos[i] = new CharacterModel.RendererInfo
+                {
+                    defaultMaterial = renderers[i] is SkinnedMeshRenderer ? renderers[i].sharedMaterial : renderers[i].material,
+                    renderer = renderers[i],
+                    ignoreOverlays = false,
+                    hideOnDeath = true
+                };
+            }
+
+            var displayComp = itemModel.AddComponent<ItemDisplay>();
+            displayComp.rendererInfos = renderInfos;
 
             return itemModel;
         }

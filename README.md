@@ -11,8 +11,8 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 ## To-Do List
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
-- Test screenshot / instant restart issue
-- Test with Fuel Cell, Gesture.
+- Fix username not displaying on broadcast message for players
+- Retain Fuel Cell charge on respawn, currently it all resets.
 - Address inline TODOs
 - Code cleanup (last)
 
@@ -29,7 +29,7 @@ If you found this because you've encountered an issue with the mod, please submi
 #### Implemented
 | Icon | Name | Description |
 | --- | --- | --- |
-| ![SoulLink Icon](https://github.com/adamhaertter/ROR-SoulLinkEquipment/blob/master/img/SoulLinkIcon.png?raw=true) | Soul Links | Transform into another Survivor at will. |
+| ![SoulLink Icon](https://github.com/adamhaertter/ROR-SoulLinkEquipment/blob/master/img/SoulLinkIcon_Fused.png?raw=true) | Soul Links | Transform into another Survivor at will. |
 
 *The tier of this item is configurable. It can be made either a standard Equipment or Lunar Equipment from the Settings menu in-game.*
 
