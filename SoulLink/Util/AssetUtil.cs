@@ -1,5 +1,7 @@
-﻿using System;
+﻿using RoR2;
+using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -17,7 +19,7 @@ namespace SoulLink.Util
         {
             get
             {
-                return Path.Combine(Path.GetDirectoryName(SoulLink.SavedInfo.Location), bundleName);
+                return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(SoulLink.SavedInfo.Location), bundleName);
             }
         }
 
@@ -77,7 +79,7 @@ namespace SoulLink.Util
             {
                 filename += ".prefab"; // Default handling if sent with no extension.
             }
-            return SafeLoad<GameObject>(filename) ?? defaultModel;
+            return AddLogbookComponents(SafeLoad<GameObject>(filename)) ?? defaultModel;
         }
 
         /// <summary>
@@ -110,6 +112,39 @@ namespace SoulLink.Util
         public static GameObject LoadBaseGameModel(string path)
         {
             return Addressables.LoadAssetAsync<GameObject>(path).WaitForCompletion();
+        }
+
+        // Shoutout to the Sandswept Team for inspiring this solution.
+        public static GameObject AddLogbookComponents(GameObject itemModel)
+        {
+            if (itemModel.GetComponent<ModelPanelParameters>() != null) return itemModel;
+
+            // Add focus component
+            GameObject focus = new GameObject("Focus");
+            focus.transform.parent = itemModel.transform;
+            MeshRenderer biggestRenderer = itemModel.GetComponentsInChildren<MeshRenderer>().ToList().OrderByDescending(x => SumVectorDims(x.bounds.size)).First();
+            focus.transform.parent = itemModel.transform;
+            focus.transform.position = biggestRenderer.bounds.center;
+
+            // Add camera component
+            GameObject camera = new GameObject("Camera");
+            camera.transform.parent = itemModel.transform;
+            camera.transform.parent = itemModel.transform;
+            camera.transform.localPosition = focus.transform.position;
+
+            // Add model panel parameters component
+            var modelPanelParameters = itemModel.AddComponent<ModelPanelParameters>();
+            modelPanelParameters.focusPointTransform = focus.transform;
+            modelPanelParameters.cameraPositionTransform = camera.transform;
+            modelPanelParameters.minDistance = .1f * SumVectorDims(biggestRenderer.bounds.size);
+            modelPanelParameters.maxDistance = 1f * SumVectorDims(biggestRenderer.bounds.size);
+
+            return itemModel;
+        }
+
+        private static float SumVectorDims(Vector3 vector)
+        {
+            return Mathf.Abs(vector.x) +Mathf.Abs(vector.y) + Mathf.Abs(vector.z);
         }
     }
 
