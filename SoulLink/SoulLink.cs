@@ -85,7 +85,7 @@ namespace SoulLink
             string tabOptions = "Configuration";
             isLunarEquip = Config.Bind(new ConfigDefinition(tabOptions, "Make Lunar Equipment"), false, new ConfigDescription("Do you want the Soul Links to be a Lunar equipment? If this is enabled, the item tier will change to Lunar, so they will no longer spawn in Equipment Barrels. The functionality is the same.\n\nBy default, this is disabled, meaning they will be a standard orange Equipment. As a standard Equipment, Scavengers have a chance to spawn with this Equipment."));
             ModSettingsManager.AddOption(new CheckBoxOption(isLunarEquip, true)); // Because this happens in Awake(), we need a restart for the tier change to take effect.
-            
+
             customCooldown = Config.Bind(new ConfigDefinition(tabOptions, "Equipment Cooldown"), 60f, new ConfigDescription("Set a custom cooldown (in seconds) for the Soul Links to make them more balanced (or more broken). Tweak away to your heart's content.\n\nBy default, this timer is set to 60, making the equipment useable once per minute."));
             ModSettingsManager.AddOption(new FloatFieldOption(customCooldown));
             customCooldown.SettingChanged += (obj, args) =>

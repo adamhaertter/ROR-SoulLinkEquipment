@@ -11,9 +11,8 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 ## To-Do List
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
-- Add a chat message when the bond happens. (to indicate for Scavengers, too)
 - Test screenshot / instant restart issue
-- Test with Fuel Cell, Bottled Chaos, Gesture.
+- Test with Fuel Cell, Gesture.
 - Address inline TODOs
 - Code cleanup (last)
 

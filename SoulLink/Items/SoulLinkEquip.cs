@@ -24,6 +24,7 @@ namespace SoulLink.Items
         public static EquipmentDef equipDef;
         private static String itemId = "SoulLink";
         private static SurvivorDef[] validTransformTargets;
+        private static String chatMessage = "<style=cHumanObjective>{user}</style><style=cEvent> has bound their soul to </style><style=cWorldEvent>{target}</style>";
 
         internal static void Init()
         {
@@ -54,13 +55,14 @@ namespace SoulLink.Items
             equipDef.canBeRandomlyTriggered = false;
             equipDef.canDrop = true;
             equipDef.cooldown = SoulLink.GetCustomCooldown();
-
-            if(SoulLink.IsConfigLunar())
+            
+            if (SoulLink.IsConfigLunar())
             {
                 equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon_Lunar.png");
                 equipDef.isLunar = true;
                 equipDef.colorIndex = ColorCatalog.ColorIndex.LunarItem;
-            } else
+            }
+            else
             {
                 equipDef.pickupIconSprite = AssetUtil.LoadSprite("SoulLinkIcon.png");
                 equipDef.isLunar = false;
@@ -405,6 +407,33 @@ namespace SoulLink.Items
             Log.Debug($"validTransformTargets set with {validTransformTargets.Length} as its length");
         }
 
+        private static void BroadcastBondedChatMessage(CharacterBody userBody, CharacterBody targetBody)
+        {
+            String customChatMsg = chatMessage.Replace("{target}", targetBody.GetDisplayName());
+            // Apply coloring to the user's name based on team affiliation - should make it easier to see if this is a friendly or dangerous message in a pinch.
+            switch (userBody.master.teamIndex)
+            {
+                case TeamIndex.Monster:
+                    customChatMsg = customChatMsg.Replace("cHumanObjective", "cDeath");
+                    break;
+                case TeamIndex.Void:
+                    customChatMsg = customChatMsg.Replace("cHumanObjective", "cIsVoid");
+                    break;
+                case TeamIndex.Lunar:
+                    customChatMsg = customChatMsg.Replace("cHumanObjective", "cLunarObjective");
+                    break;
+                case TeamIndex.Neutral:
+                    customChatMsg = customChatMsg.Replace("cHumanObjective", "cArtifact");
+                    break;
+                case TeamIndex.Player:
+                    if (!userBody.isPlayerControlled) // If it's on the player's team but not the player, it's probably an equipment drone. Bad assumption if you're using Engi Turret Equip mod but whatever they can be orange too.
+                        customChatMsg = customChatMsg.Replace("<style=cHumanObjective>{user}</style>", $"<color=#{ColorCatalog.GetColorHexString(ColorCatalog.ColorIndex.Equipment)}>" + "{user}</color>");
+                    break;
+                // No need for a default case since the style cHumanObjective is written into the original string. Do not remove that or you'll get white text!
+            }
+            Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = customChatMsg.Replace("{user}", userBody.GetDisplayName()) });
+        }
+
         public class SoulLinkEquipBehavior : CharacterBody.ItemBehavior
         {
             [ItemDefAssociation(useOnServer = true, useOnClient = false)]
@@ -441,6 +470,7 @@ namespace SoulLink.Items
                         firstTimeUse = false;
                         chosenBodyTarget = GetBodyFromSurvivorDef(TransformTargetOptions[UnityEngine.Random.RandomRangeInt(0, TransformTargetOptions.Length)]);
                         Log.Debug($"AI user {body.name} has been assigned {chosenBodyTarget.name} as their Link");
+                        BroadcastBondedChatMessage(body, chosenBodyTarget);
                     }
 
                     if (firstTimeUse)
@@ -504,8 +534,9 @@ namespace SoulLink.Items
                     var selectedIndex = (menu.currentPage * 9) + menu.selectedOptionIndex;
                     chosenBodyTarget = GetBodyFromSurvivorDef(TransformTargetOptions[selectedIndex]); 
                     Log.Debug($"chosenBodyTarget picked! selectedIndex {selectedIndex}, menu.selectedOptionIndex {menu.selectedOptionIndex}, chosenBodyTarget.name {chosenBodyTarget.name}");
-                    Destroy(menu.gameObject); // Only destroy the window once we have our answer.
+                    Destroy(menu.gameObject); // Only destroy the window once we have our answer. 
                     body.inventory.DeductActiveEquipmentCooldown(equipDef.cooldown * 3 / 4);
+                    BroadcastBondedChatMessage(body, chosenBodyTarget);
                 }
                 // Deal damage and apply curse on transformation
                 // I have to do this here rather than in the transformation block because I have to let the game recalculate the health portions for the new body first.
