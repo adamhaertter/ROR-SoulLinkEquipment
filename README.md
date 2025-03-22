@@ -11,8 +11,6 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 ## To-Do List
 - Hide the debug controls (P, F1)
 - Create the Thunderstore upload
-- Fix username not displaying on broadcast message for players
-- Retain Fuel Cell charge on respawn, currently it all resets.
 - Address inline TODOs
 - Code cleanup (last)
 

@@ -431,7 +431,7 @@ namespace SoulLink.Items
                     break;
                 // No need for a default case since the style cHumanObjective is written into the original string. Do not remove that or you'll get white text!
             }
-            Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = customChatMsg.Replace("{user}", userBody.GetDisplayName()) });
+            Chat.SendBroadcastChat(new Chat.SimpleChatMessage { baseToken = customChatMsg.Replace("{user}", userBody.isPlayerControlled ? userBody.master.playerCharacterMasterController.networkUser.userName : userBody.GetDisplayName()) });
         }
 
         public class SoulLinkEquipBehavior : CharacterBody.ItemBehavior
