@@ -70,7 +70,7 @@ namespace SoulLink
         private void Update()
         {   
             // These are debug controls. I'm disabling them during normal gameplay, but keeping so I can test.
-            ManageCustomHUD();
+            //ManageCustomHUD();
             DebugSpawnEquipment(SoulLinkEquip.equipDef, KeyCode.F1);
         }
 
