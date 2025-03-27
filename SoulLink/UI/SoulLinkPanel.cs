@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
-using System.ComponentModel;
 using System.Linq;
 using System;
 
@@ -14,7 +13,7 @@ namespace SoulLink.UI
     {
 
         private string lastSelectedOption;
-        private List<Image> selectableImages = new List<Image>();
+        private readonly List<Image> selectableImages = [];
         public Sprite[] optionCatalogue { get; set; }
         public int selectedOptionIndex = -1;
         public int currentPage = 0;
@@ -82,7 +81,6 @@ namespace SoulLink.UI
             textMesh.color = Color.white;
             textMesh.fontSize = 25;
             textMesh.alignment = TextAlignmentOptions.Center;
-            //labelRect.sizeDelta += new Vector2(0, 20);
             Log.Debug($"Render: TextMesh established.");
 
             Log.Debug($"Loading pageSprites. optionCatalogue.Length {optionCatalogue.Length}");
@@ -93,7 +91,6 @@ namespace SoulLink.UI
             Log.Debug($"Render: Image Grid Created");
 
             RectTransform myBG = GetComponent<RectTransform>();
-            //myBG.sizeDelta = new Vector2(contentsDimensions.x * 1.3f, contentsDimensions.y * 1.8f);
             float maxDim = Math.Max(contentsDimensions.x, contentsDimensions.y);
             myBG.sizeDelta = new Vector2(maxDim * 1.25f, maxDim * 1.45f);
             Log.Debug($"Render: BG Image resized");
@@ -119,9 +116,6 @@ namespace SoulLink.UI
 
             GameObject gridContainer = new GameObject("ImageGrid", typeof(RectTransform));
             gridContainer.transform.SetParent(windowContainer.transform, false);
-
-            //RectTransform gridRect = gridContainer.AddComponent<RectTransform>();
-            //gridRect.sizeDelta = new Vector2(400, 300);
 
             GridLayoutGroup gridLayout = gridContainer.AddComponent<GridLayoutGroup>();
             gridLayout.cellSize = new Vector2(90, 110); // Image size + padding
@@ -235,10 +229,6 @@ namespace SoulLink.UI
             selectedOptionIndex = index;
             lastSelectedOption = $"Option {index}";
             Debug.Log($"Selected: {lastSelectedOption}");
-
-            //Toggle(); // Close UI after selection
-            //Destroy(gameObject); // TODO not sure if this will have terrible repurcussions 
-
         }
 
         public static SoulLinkPanel CreateUI(Transform parent)
@@ -250,9 +240,8 @@ namespace SoulLink.UI
             rectTransform.sizeDelta = new Vector2(400, 300); // Adjust as needed
 
             Image background = panelObject.AddComponent<Image>();
-            background.color = Color.white;//new Color(0, 0, 0, 0.7f); // Semi-transparent black
+            background.color = Color.white; // White color needed to show non-tinted sprite
 
-            //Sprite roundedBG = AssetUtil.LoadBaseGameSprite("RoR2/CU8/texArtifactDelusionPickerBGMain.png");
             Sprite roundedBG = AssetUtil.LoadSprite("SoulLinkMenuUI.png");
             if(roundedBG)
             {

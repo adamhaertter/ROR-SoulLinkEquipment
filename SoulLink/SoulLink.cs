@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using PrestigeItems.Items;
 using SoulLink.Items;
 using R2API;
 using RoR2;

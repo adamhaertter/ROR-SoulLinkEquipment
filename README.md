@@ -11,8 +11,8 @@ This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier ite
 ## To-Do List
 - Hide the debug controls (F1)
 - Create the Thunderstore upload
-- Address inline TODOs
-- Code cleanup (last)
+- Set the release number
+- Disable excess debug logging, only leave what's necessary for debugging outside issues.
 
 ## Issues and Bugs
 

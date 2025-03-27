@@ -3,18 +3,12 @@ using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using System.Linq;
 using static RoR2.Items.BaseItemBodyBehavior;
 using SoulLink.UI;
 using UnityEngine.EventSystems;
 using RoR2.UI;
-using Rewired;
-using static UnityEngine.ParticleSystem.PlaybackState;
-using UnityEngine.UIElements.Experimental;
-using UnityEngine.XR;
-using static RoR2.MasterSpawnSlotController;
 using UnityEngine.Networking;
 
 namespace SoulLink.Items
@@ -22,10 +16,10 @@ namespace SoulLink.Items
     internal class SoulLinkEquip
     {
         public static EquipmentDef equipDef;
-        private static String itemId = "SoulLink";
+        private static string itemId = "SoulLink";
         private static SurvivorDef[] validTransformTargets;
-        private static String chatMessage = "<style=cHumanObjective>{user}</style><style=cEvent> has bound their soul to </style><style=cWorldEvent>{target}</style>";
-        private static String[] buffsToTransfer = ["bdPermanentCurse", "bdPermanentDebuff", "bdSoulCost", "bdExtraLifeBuff", "bdFreeUnlock", "bdBanditSkull", "bdChakraBuff", "bdRevitalizeBuff"];
+        private readonly static string chatMessage = "<style=cHumanObjective>{user}</style><style=cEvent> has bound their soul to </style><style=cWorldEvent>{target}</style>";
+        private readonly static string[] buffsToTransfer = ["bdPermanentCurse", "bdPermanentDebuff", "bdSoulCost", "bdExtraLifeBuff", "bdFreeUnlock", "bdBanditSkull", "bdChakraBuff", "bdRevitalizeBuff"];
 
         internal static void Init()
         {
@@ -397,8 +391,6 @@ namespace SoulLink.Items
         }
         private static void SearchForSurvivorDefs()
         {
-            //validTransformTargets = SurvivorCatalog.survivorDefs; // TODO change back, checking if my search conditions are bad.
-
             validTransformTargets = SurvivorCatalog.orderedSurvivorDefs.Where(survivorDef =>
                                                                              SurvivorCatalog.SurvivorIsUnlockedOnThisClient(survivorDef.survivorIndex) &&
                                                                              survivorDef.CheckRequiredExpansionEnabled() && // Avoid character piracy lol
@@ -452,7 +444,6 @@ namespace SoulLink.Items
 
             private void onEnable()
             {
-                //Log.Debug($"onEnable entered for PrestigeFungus");
 
             }
 
@@ -486,19 +477,13 @@ namespace SoulLink.Items
                             Transform mainUIArea = mainContainer.Find("MainUIArea");
                             mainUIArea.gameObject.SetActive(true);
 
-                            //var springCanvas = mainUIArea.Find("SpringCanvas");
-                            //Transform screenLocation = springCanvas.Find("UpperRightCluster");
-
                             menu = SoulLinkPanel.CreateUI(mainUIArea);
-                            //Instantiate(menu, mainUIArea);
 
                             menu.optionCatalogue = GetTargetImages(TransformTargetOptions);
                             Log.Debug($"optionCatalogue set in FixedUpdate. TransformTargetOptions.Length {TransformTargetOptions.Length}, optionCatalogue.Length {menu.optionCatalogue.Length}");
                             menu.Render();
-                            //SoulLinkPanel.Show();
                             Log.Debug("Menu Initialized in Behavior");
                         }
-                        //SoulLinkPanel.Toggle();
                         firstTimeUse = false;
                     }
                     else
@@ -522,7 +507,7 @@ namespace SoulLink.Items
                             foreach(var buffIndex in body.activeBuffsList)
                             {
                                 var buff = BuffCatalog.GetBuffDef(buffIndex);
-                                Log.Debug($"Body {body.name} has buff {buff.name} in activeBuffsList");
+                                //Log.Debug($"Body {body.name} has buff {buff.name} in activeBuffsList");
                                 if (buffsToTransfer.Contains(buff.name))
                                 {
                                     buffsToReapply.Add((buff.buffIndex, body.GetBuffCount(buff)));
@@ -569,7 +554,9 @@ namespace SoulLink.Items
 
                     body.healthComponent.TakeDamage(damageInfo);
                     //body.cursePenalty = curseBeforeTransform; 
-                    /* In transferring curse via the debuff system instead of on the health component, 
+
+                    /* NOTE TO SELF:
+                     * In transferring curse via the debuff system instead of on the health component, 
                      * you now take extra curse on each transform because of the initial hit for equalizing damage.
                      * 
                      * I kind of like this stylistically actually, but it could become too punishing in practice.
