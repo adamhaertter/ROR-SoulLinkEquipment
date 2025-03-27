@@ -25,6 +25,7 @@ namespace SoulLink.Items
         private static String itemId = "SoulLink";
         private static SurvivorDef[] validTransformTargets;
         private static String chatMessage = "<style=cHumanObjective>{user}</style><style=cEvent> has bound their soul to </style><style=cWorldEvent>{target}</style>";
+        private static String[] buffsToTransfer = ["bdPermanentCurse", "bdPermanentDebuff", "bdSoulCost", "bdExtraLifeBuff", "bdFreeUnlock", "bdBanditSkull", "bdChakraBuff", "bdRevitalizeBuff"];
 
         internal static void Init()
         {
@@ -446,7 +447,8 @@ namespace SoulLink.Items
             private SoulLinkPanel menu;
             private bool wasJustRespawned = false;
             private float healthBeforeTransform;
-            private float curseBeforeTransform;
+            //private float curseBeforeTransform; // Disabling in favor of transferring curse via the debuffs
+            private List<(BuffIndex, int)> starterBuffs;
 
             private void onEnable()
             {
@@ -514,7 +516,20 @@ namespace SoulLink.Items
                             newBehavior.chosenBodyTarget = originalBody;
                             newBehavior.wasJustRespawned = true;
                             newBehavior.healthBeforeTransform = body.healthComponent.health;
-                            newBehavior.curseBeforeTransform = body.cursePenalty;
+                            //newBehavior.curseBeforeTransform = body.cursePenalty;
+
+                            var buffsToReapply = new List<(BuffIndex, int)>();
+                            foreach(var buffIndex in body.activeBuffsList)
+                            {
+                                var buff = BuffCatalog.GetBuffDef(buffIndex);
+                                Log.Debug($"Body {body.name} has buff {buff.name} in activeBuffsList");
+                                if (buffsToTransfer.Contains(buff.name))
+                                {
+                                    buffsToReapply.Add((buff.buffIndex, body.GetBuffCount(buff)));
+                                }
+
+                            }
+                            newBehavior.starterBuffs = buffsToReapply;
 
                             Log.Debug("Values set before respawning...");
                             Log.Debug($"originalBody: {originalBody.name}, newBody: {newBody.name}");
@@ -553,7 +568,22 @@ namespace SoulLink.Items
                     };
 
                     body.healthComponent.TakeDamage(damageInfo);
-                    body.cursePenalty = curseBeforeTransform;
+                    //body.cursePenalty = curseBeforeTransform; 
+                    /* In transferring curse via the debuff system instead of on the health component, 
+                     * you now take extra curse on each transform because of the initial hit for equalizing damage.
+                     * 
+                     * I kind of like this stylistically actually, but it could become too punishing in practice.
+                     * If I want to change this later, I'll just have to find this massive block of text so I know
+                     * to remove all curse debuffs before I start adding them right here.
+                     */
+                    foreach(var buff in starterBuffs)
+                    {
+                        for(int i = 0; i < buff.Item2; i++)
+                        {
+                            // Add as many noteworthy buffs as the user had before transforming.
+                            body.AddBuff(BuffCatalog.GetBuffDef(buff.Item1));
+                        }
+                    }
                     wasJustRespawned = false;
                 }
             }

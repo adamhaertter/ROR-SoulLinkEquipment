@@ -9,7 +9,7 @@
 This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier item to the game which allows you to swap your playable character when used. It features custom UI functionality, as well as configurable options support to tweak specifics and replace the keybinds for the custom window. The item is fully modelled and sprited.
 
 ## To-Do List
-- Hide the debug controls (P, F1)
+- Hide the debug controls (F1)
 - Create the Thunderstore upload
 - Address inline TODOs
 - Code cleanup (last)
