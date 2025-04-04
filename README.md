@@ -9,8 +9,7 @@
 This is a mod for the game Risk of Rain 2. It simply adds one Equipment-tier item to the game which allows you to swap your playable character when used. It features custom UI functionality, as well as configurable options support to tweak specifics and replace the keybinds for the custom window. The item is fully modelled and sprited.
 
 ## To-Do List
-- Create the Thunderstore upload
-- Set the release number
+- Nothing, ready to launch :)
 
 ## Issues and Bugs
 
@@ -30,9 +29,9 @@ If you found this because you've encountered an issue with the mod, please submi
 *The tier of this item is configurable. It can be made either a standard Equipment or Lunar Equipment from the Settings menu in-game.*
 
 ## Installation
-You can download the latest uploaded release from the ThunderStore on the release [page](https://thunderstore.io/package/BlueBubbee/Prestige_Items_Beta/) or by using the mod manager. **This is the recommended installation.** I'd recommend using r2ModMan as your launcher, but the Thunderstore app probably works too.
+You can download the latest uploaded release from the ThunderStore on the release [page](https://thunderstore.io/package/BlueBubbee/Soul_Links/) or by using the mod manager. **This is the recommended installation.** I'd recommend using r2ModMan as your launcher, but the Thunderstore app probably works too.
 
-If you prefer to manually install, ensure you have BepInEx, R2API, and Risk_Of_Options already installed. You can download the `SoulLink.dll`, `SoulLink.pdb`, and `soullinkassets` files from the GitHub Releases page and place them in a folder under your `[Mod Profile]/BepInEx/plugins/` folder. These files need to be at the same folder level as each other to be able to load the sprites and models. 
+If you prefer to manually install, ensure you have BepInEx, R2API, and Risk_Of_Options already installed. You can download the `SoulLink.dll` and `soullinkassets` files from the GitHub Releases page and place them in a folder under your `[Mod Profile]/BepInEx/plugins/` folder. These files need to be at the same folder level as each other to be able to load the sprites and models. 
 
 ## Credits
 I built this with the knowledge I had gained from my work on [my first mod](https://github.com/adamhaertter/PrestigeItemsMod/), but cross referencing all of these resources was still incredibly helpful.

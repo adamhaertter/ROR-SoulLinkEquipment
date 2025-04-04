@@ -28,7 +28,7 @@ namespace SoulLink
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "BlueB";
         public const string PluginName = "SoulLinkEquipment";
-        public const string PluginVersion = "0.0.0"; // TODO Update version number when it's ready for a real release.
+        public const string PluginVersion = "1.0.0";
 
         private bool hudInitialized;
 
