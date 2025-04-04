@@ -63,7 +63,7 @@ namespace SoulLink.UI
                     Destroy(child.gameObject);
                 }
             }
-            Log.Debug($"Render: All children destroyed");
+            //Log.Debug($"Render: All children destroyed");
 
             GameObject labelObj = AssetUtil.LoadBaseGameModel("RoR2/Base/UI/DefaultLabel.prefab");
             var soulLinkLabel = Instantiate(labelObj, transform);
@@ -74,14 +74,14 @@ namespace SoulLink.UI
             labelRect.SetAsFirstSibling();
             labelRect.anchorMin = new Vector2(0.5f, 0.85f); // Centered at the top
             labelRect.anchorMax = new Vector2(0.5f, 0.85f);
-            Log.Debug($"Render: LabelRect set up and anchored");
+            //Log.Debug($"Render: LabelRect set up and anchored");
 
             HGTextMeshProUGUI textMesh = soulLinkLabel.GetComponent<HGTextMeshProUGUI>();
             textMesh.text = "Forge Your Bond";
             textMesh.color = Color.white;
             textMesh.fontSize = 25;
             textMesh.alignment = TextAlignmentOptions.Center;
-            Log.Debug($"Render: TextMesh established.");
+            //Log.Debug($"Render: TextMesh established.");
 
             Log.Debug($"Loading pageSprites. optionCatalogue.Length {optionCatalogue.Length}");
             Sprite[] pageSprites = GetPageSprites(optionCatalogue, currentPage);
@@ -95,7 +95,7 @@ namespace SoulLink.UI
             myBG.sizeDelta = new Vector2(maxDim * 1.25f, maxDim * 1.45f);
             Log.Debug($"Render: BG Image resized");
             labelRect.SetParent(myBG.transform);
-            Log.Debug($"Render: labelRect parent reset.");
+            //Log.Debug($"Render: labelRect parent reset.");
         }
 
         private Vector2 CreateImageGrid(Sprite[] imageSprites)

@@ -304,7 +304,7 @@ namespace SoulLink.Items
                 if (body.GetComponent<SoulLinkEquipBehavior>() == null)
                 {
                     body.AddItemBehavior<SoulLinkEquipBehavior>(body.inventory.GetEquipment(body.inventory.activeEquipmentSlot).equipmentDef == equipDef ? 1 : 0);
-                    Log.Debug($"Added SoulLinkEquipBehavior to {body.name}");
+                    //Log.Debug($"Added SoulLinkEquipBehavior to {body.name}");
                 } else
                 { 
                     // Check if the equipment is held in any possible slots (thanks MUL-T)
@@ -321,7 +321,7 @@ namespace SoulLink.Items
                     if (!foundMyEquipment)
                     {
                         // If a body no longer has this equipment but has had it before, we want to reset the params.
-                        Log.Debug($"{body.name} no longer has Soul Links, resetting behavior to first time use state.");
+                        //Log.Debug($"{body.name} no longer has Soul Links, resetting behavior to first time use state.");
                         var behavior = body.GetComponent<SoulLinkEquipBehavior>();
                         behavior.firstTimeUse = true;
                         behavior.chosenBodyTarget = null; // Nullify this so that the menu can reassign a new character.
@@ -350,10 +350,10 @@ namespace SoulLink.Items
                         {
                             SearchForSurvivorDefs();
                             myBehavior.TransformTargetOptions = validTransformTargets;
-                            Log.Debug("TransformTargetOptions initialized on myBehavior.");
+                            //Log.Debug("TransformTargetOptions initialized on myBehavior.");
                         }
                         myBehavior.activated = true; 
-                        Log.Debug("SoulLinkEquip: Behavior activated set to true.");
+                        //Log.Debug("SoulLinkEquip: Behavior activated set to true.");
                     }
 
                     return true;
@@ -462,7 +462,7 @@ namespace SoulLink.Items
                         // Manual override so if an AI body (Scavenger, Equip Drone, etc.) picks this up, they won't have to menu.
                         firstTimeUse = false;
                         chosenBodyTarget = GetBodyFromSurvivorDef(TransformTargetOptions[UnityEngine.Random.RandomRangeInt(0, TransformTargetOptions.Length)]);
-                        Log.Debug($"AI user {body.name} has been assigned {chosenBodyTarget.name} as their Link");
+                        //Log.Debug($"AI user {body.name} has been assigned {chosenBodyTarget.name} as their Link");
                         BroadcastBondedChatMessage(body, chosenBodyTarget);
                     }
 
@@ -480,7 +480,7 @@ namespace SoulLink.Items
                             menu = SoulLinkPanel.CreateUI(mainUIArea);
 
                             menu.optionCatalogue = GetTargetImages(TransformTargetOptions);
-                            Log.Debug($"optionCatalogue set in FixedUpdate. TransformTargetOptions.Length {TransformTargetOptions.Length}, optionCatalogue.Length {menu.optionCatalogue.Length}");
+                            //Log.Debug($"optionCatalogue set in FixedUpdate. TransformTargetOptions.Length {TransformTargetOptions.Length}, optionCatalogue.Length {menu.optionCatalogue.Length}");
                             menu.Render();
                             Log.Debug("Menu Initialized in Behavior");
                         }
@@ -515,10 +515,8 @@ namespace SoulLink.Items
 
                             }
                             newBehavior.starterBuffs = buffsToReapply;
-
-                            Log.Debug("Values set before respawning...");
-                            Log.Debug($"originalBody: {originalBody.name}, newBody: {newBody.name}");
-                            Log.Debug("Transforming!");
+                            
+                            Log.Debug($"Transforming! originalBody: {originalBody.name}, newBody: {newBody.name}");
                         } else
                         {
                             Log.Debug($"No chosenBodyTarget detected on current body {body.name}");
